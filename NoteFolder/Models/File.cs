@@ -22,15 +22,21 @@ namespace NoteFolder.Models {
 			File f = new File { Parent = parent, Name = name, Description = desc, Text = text, TimeCreated = DateTime.Now };
 			f.TimeLastEdited = f.TimeCreated;
 			f.InitPath(parent);
-			if(parent != null) parent.Children.Add(f);
+			f.SetParent(parent);
 			return f;
 		}
 		public static File AddFolder(this File parent, string name, string desc = null) {
 			File f = new File { Parent = parent, Name = name, Description = desc, IsFolder = true, TimeCreated = DateTime.Now };
 			f.TimeLastEdited = f.TimeCreated;
 			f.InitPath(parent);
-			if(parent != null) parent.Children.Add(f);
+			f.SetParent(parent);
 			return f;
+		}
+		public static void SetParent(this File f, File parent) {
+			if(parent != null) {
+				if(parent.Children == null) parent.Children = new List<File>();
+				parent.Children.Add(f);
+			}
 		}
 		public static void InitPath(this File f, File parent) {
 			if(parent == null) f.Path = f.Name;
