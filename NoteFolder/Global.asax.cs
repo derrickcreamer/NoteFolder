@@ -13,6 +13,7 @@ namespace NoteFolder
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+			ViewModels.FileAutoMapper.Map();
         }
     }
 }
