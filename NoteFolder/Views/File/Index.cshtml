@@ -1,16 +1,10 @@
 ﻿@model NoteFolder.ViewModels.FileVM
 
-@{
-    Layout = null;
-}
-
 @helper DisplayFileInfo(NoteFolder.ViewModels.FileVM file, int indent) {
 	<div style="margin-left: @(indent*5)%">
 		<table class="table table-condensed">
-			<tr><td>@file.Path</td></tr>
 			<tr><td>@file.Name</td></tr>
 			<tr><td>@file.Description</td></tr>
-			<tr><td>@file.Text</td></tr>
 			<tr><td>@file.TimeCreated</td></tr>
 			<tr><td>@file.TimeLastEdited</td></tr>
 		</table>
@@ -39,6 +33,17 @@
 </head>
 <body>
     <div> 
+		@if(Model.IsFolder) {
+			@* todo: Hide forms until Create Note / Create Folder buttons are clicked *@
+			using(Html.BeginForm("Create", "File")) {
+				@Html.TextAreaFor(x => x.Text);
+				<input type="submit" value="Create" />
+			}
+		}
+		else {
+
+		}
+		@* todo: Make name & description editable for all files *@
 		@DisplayFileInfo(Model, 0)
 		@if(Model.Children.Any()) {
 			@DisplayChildren(Model.Children, 0)

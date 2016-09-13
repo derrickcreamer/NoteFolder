@@ -10,14 +10,19 @@ namespace NoteFolder.Models {
 			var docs = FileModelExtensions.AddFolder(null,"Documents");
 			var proj = docs.AddFolder("Projects");
 			var nf = proj.AddFolder("NoteFolder", desc: "Note organization");
-			var sln = nf.AddNote("NoteFolder.sln", text: "<Solution text here>");
-			var source = nf.AddFolder("Source");
-			var cs = source.AddNote("NoteFolder.cs", text: "<Source code here>");
-			db.Files.AddRange(new File[] {docs, proj, nf, sln, source, cs });
+			var notes = nf.AddNote("NoteFolderNotes", text: "<full note text here>");
+			var ideas = proj.AddNote("ProjectIdeas", desc: "Only the best!", text: "<full text of project ideas note here>");
+			db.Files.AddRange(new File[] {docs, proj, nf, notes, ideas });
 			base.Seed(db);
 		}
 	}
 	public static class FileModelExtensions {
+		public static string RemoveLastPathSection(this string path) {
+			int idx = path.LastIndexOf('/');
+			if(idx == -1) return "";
+			return path.Substring(0, idx);
+		}
+		//todo: These extension methods are useful for creating test data, but shouldn't be exposed to the rest of the project.
 		public static File AddNote(this File parent, string name, string desc = null, string text = null) {
 			File f = new File { Parent = parent, Name = name, Description = desc, Text = text, TimeCreated = DateTime.Now };
 			f.TimeLastEdited = f.TimeCreated;

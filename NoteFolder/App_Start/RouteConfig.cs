@@ -15,8 +15,8 @@ namespace NoteFolder
 
 			routes.MapRoute(
 				name: "File",
-				url: "files/{*path}",
-				defaults: new { controller = "File", action = "Index" }
+				url: "guest/files/{*path}",
+				defaults: new { controller = "File", action = "Index", path = "" }
 			);
 
 			routes.MapRoute(
