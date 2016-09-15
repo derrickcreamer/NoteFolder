@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Web;
 
 namespace NoteFolder.Models {
 	public class FileTestInit : DropCreateDatabaseAlways<FileDbContext> {
@@ -17,35 +18,11 @@ namespace NoteFolder.Models {
 		}
 	}
 	public static class FileModelExtensions {
-		public static string RemoveLastPathSection(this string path) {
-			int idx = path.LastIndexOf('/');
-			if(idx == -1) return "";
-			return path.Substring(0, idx);
-		}
-		//todo: These extension methods are useful for creating test data, but shouldn't be exposed to the rest of the project.
 		public static File AddNote(this File parent, string name, string desc = null, string text = null) {
-			File f = new File { Parent = parent, Name = name, Description = desc, Text = text, TimeCreated = DateTime.Now };
-			f.TimeLastEdited = f.TimeCreated;
-			f.InitPath(parent);
-			f.SetParent(parent);
-			return f;
+			return new File(parent, false, name, desc, text);
 		}
 		public static File AddFolder(this File parent, string name, string desc = null) {
-			File f = new File { Parent = parent, Name = name, Description = desc, IsFolder = true, TimeCreated = DateTime.Now };
-			f.TimeLastEdited = f.TimeCreated;
-			f.InitPath(parent);
-			f.SetParent(parent);
-			return f;
-		}
-		public static void SetParent(this File f, File parent) {
-			if(parent != null) {
-				if(parent.Children == null) parent.Children = new List<File>();
-				parent.Children.Add(f);
-			}
-		}
-		public static void InitPath(this File f, File parent) {
-			if(parent == null) f.Path = f.Name;
-			else f.Path = parent.Path + "/" + f.Name;
+			return new File(parent, true, name, desc);
 		}
 	}
 	public class FileDbContext : DbContext {
@@ -53,19 +30,47 @@ namespace NoteFolder.Models {
 		public FileDbContext() {
 			Database.SetInitializer(new FileTestInit());
 		}
+
+		public File GetFileByPath(string path) {
+			var names = path.Split('/');
+			if(names.Length == 0) return null;
+			string name0 = names[0];
+			var query = Files.Where(x => x.ParentID == null && x.Name == name0);
+			for(int i=1; i<names.Length; ++i) {
+				string nameN = names[i];
+				query = query.SelectMany(x => Files.Where(y => y.ParentID == x.ID && y.Name == nameN));
+			}
+			return query.SingleOrDefault();
+		}
 	}
 
 	public class File {
 		public int ID { get; set; }
+
+		[Required]
 		public string Name { get; set; }
-		public string Path { get; set; }
 		public string Description { get; set; }
 		public string Text { get; set; }
 		public bool IsFolder { get; set; }
 		public DateTime TimeCreated {get; set; }
 		public DateTime TimeLastEdited { get; set; }
+		public int? ParentID { get; set; }
 
+		[InverseProperty("Children")]
 		public virtual File Parent { get; set; }
-		public virtual ICollection<File> Children { get; set; }
+
+		public virtual ICollection<File> Children { get; set; } = new List<File>();
+
+		public File() { }
+		public File(File parent, bool isFolder, string name, string desc = null, string text = null, DateTime? time = null) {
+			Parent = parent;
+			IsFolder = isFolder;
+			Name = name;
+			Description = desc;
+			Text = text;
+			if(time == null) TimeCreated = DateTime.Now;
+			else TimeCreated = time.Value;
+			TimeLastEdited = TimeCreated;
+		}
 	}
 }

@@ -21,12 +21,13 @@ namespace NoteFolder.Controllers {
 				ViewBag.RootFile = fvm;
 				return View(fvm);
 			}
-			File file = db.Files.Where(f => f.Path == path).FirstOrDefault();
+			File file = db.GetFileByPath(path);
 			if(file == null) return new HttpStatusCodeResult(404); //todo, offer to create the missing files?
 			else {
 				return View(Mapper.Map<FileVM>(file));
 			}
 		}
+		public ActionResult ViewFile(FileVM f) => View(f);
 		//todo: New Note button has inputs for name, desc. isFolder and path might be hidden and included?
 		//New Folder has the same.
 		[HttpPost]
@@ -37,11 +38,10 @@ namespace NoteFolder.Controllers {
 			File dbf = Mapper.Map<File>(f);
 			dbf.TimeCreated = DateTime.Now;
 			dbf.TimeLastEdited = dbf.TimeCreated;
-			string parentPath = dbf.Path.RemoveLastPathSection();
-			dbf.Parent = db.Files.Where(x => x.Path == parentPath).FirstOrDefault();
+			//todo: temporarily broke parentID assignment here.
 			db.Files.Add(dbf);
 			db.SaveChanges();
-			return RedirectToAction("Index");
+			return RedirectToAction("ViewFile");
 		}
 	}
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace NoteFolder.ViewModels {
 	public class FileVM {
+		[Required]
 		public string Name { get; set; }
+
+		[Required]
 		public string Path { get; set; }
 		public string Description { get; set; }
 		public string Text { get; set; }
