@@ -11,20 +11,37 @@ namespace NoteFolder.Controllers {
 	public class FileController : Controller {
 		private FileDbContext db = new FileDbContext();
 
+		/// <summary>
+		/// Maps File to FileVM while handling population of DirectChildren collection.
+		/// </summary>
+		public static FileVM FileVmFromFile(File file, bool includeDirectChildren) {
+			FileVM result = Mapper.Map<FileVM>(file);
+			if(includeDirectChildren) {
+				result.DirectChildren = new List<FileVM>();
+				foreach(File child in file.Children) {
+					result.DirectChildren.Add(Mapper.Map<FileVM>(child));
+				}
+			}
+			return result;
+		}
+
 		public ActionResult Index(string path) {
 			if(string.IsNullOrWhiteSpace(path)) {
 				FileVM fvm = new FileVM { IsFolder = true, Name = "Files" };
-				foreach(var f in db.Files.Where(f => f.Parent == null)) {
-					if(fvm.Children == null) fvm.Children = new List<FileVM>();
-					fvm.Children.Add(Mapper.Map<FileVM>(f));
+				fvm.DirectChildren = new List<FileVM>();
+				foreach(var rootLevelFile in db.Files.Where(x => x.ParentID == null)) {
+					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false));
 				}
 				ViewBag.RootFile = fvm;
 				return View(fvm);
 			}
-			File file = db.GetFileByPath(path);
+			var sections = path.Split('/');
+			File file = db.GetFileByPath(sections);
 			if(file == null) return new HttpStatusCodeResult(404); //todo, offer to create the missing files?
 			else {
-				return View(Mapper.Map<FileVM>(file));
+				FileVM fvm = FileVmFromFile(file, true);
+				fvm.Path = sections;
+				return View(fvm);
 			}
 		}
 		public ActionResult ViewFile(FileVM f) => View(f);

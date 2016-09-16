@@ -31,13 +31,15 @@ namespace NoteFolder.Models {
 			Database.SetInitializer(new FileTestInit());
 		}
 
-		public File GetFileByPath(string path) {
-			var names = path.Split('/');
-			if(names.Length == 0) return null;
-			string name0 = names[0];
+		/// <param name="path">The full path, including separators. Example: "foo/bar/baz". </param>
+		public File GetFileByPath(string path) => GetFileByPath(path.Split('/'));
+		/// <param name="path">A list of path sections. Example: "foo", "bar", "baz".</param>
+		public File GetFileByPath(IList<string> path) {
+			if(path.Count == 0) return null;
+			string name0 = path[0];
 			var query = Files.Where(x => x.ParentID == null && x.Name == name0);
-			for(int i=1; i<names.Length; ++i) {
-				string nameN = names[i];
+			for(int i=1; i<path.Count; ++i) {
+				string nameN = path[i];
 				query = query.SelectMany(x => Files.Where(y => y.ParentID == x.ID && y.Name == nameN));
 			}
 			return query.SingleOrDefault();
@@ -52,7 +54,7 @@ namespace NoteFolder.Models {
 		public string Description { get; set; }
 		public string Text { get; set; }
 		public bool IsFolder { get; set; }
-		public DateTime TimeCreated {get; set; }
+		public DateTime TimeCreated { get; set; }
 		public DateTime TimeLastEdited { get; set; }
 		public int? ParentID { get; set; }
 
