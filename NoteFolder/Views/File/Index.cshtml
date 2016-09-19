@@ -1,6 +1,6 @@
-﻿@model NoteFolder.ViewModels.FileVM
+﻿@model FileVM
 
-@helper DisplayFileInfo(NoteFolder.ViewModels.FileVM file, int indent) {
+@helper DisplayFileInfo(FileVM file, int indent) {
 	<div style="margin-left: @(indent*5)%">
 		<table class="table table-condensed">
 			<tr><td>@file.Name</td></tr>
@@ -14,7 +14,7 @@
 	</div>
 }
 
-@helper DisplayChildren(IEnumerable<NoteFolder.ViewModels.FileVM> children, int layer) {
+@helper DisplayChildren(IEnumerable<FileVM> children, int layer) {
 	if(children != null && children.Any()) {
 		<ul>
 			@foreach(var child in children) {
@@ -34,13 +34,10 @@
     <title>Index</title>
 </head>
 <body>
-    <div> 
-		@if(Model.IsFolder) {
-			@* todo: Hide forms until Create Note / Create Folder buttons are clicked *@
-			using(Html.BeginForm("Create", "File")) {
-				@Html.TextAreaFor(x => x.Text)
-				<input type="submit" value="Create" />
-			}
+    <div>
+		@TempData["LastAction"]
+		@if(Model.IsFolder) { @* todo: Hide forms until Create Note / Create Folder buttons are clicked *@
+			@Html.Partial("_Create", new FileVM { ParentID = Model.ExistingID, Path = Model.Path })
 		}
 		else {
 

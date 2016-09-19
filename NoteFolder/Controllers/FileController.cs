@@ -16,6 +16,7 @@ namespace NoteFolder.Controllers {
 		/// </summary>
 		public static FileVM FileVmFromFile(File file, bool includeDirectChildren) {
 			FileVM result = Mapper.Map<FileVM>(file);
+			result.ExistingID = file.ID;
 			if(includeDirectChildren) {
 				result.DirectChildren = new List<FileVM>();
 				foreach(File child in file.Children) {
@@ -44,21 +45,26 @@ namespace NoteFolder.Controllers {
 				return View(fvm);
 			}
 		}
-		public ActionResult ViewFile(FileVM f) => View(f);
 		//todo: New Note button has inputs for name, desc. isFolder and path might be hidden and included?
 		//New Folder has the same.
 		[HttpPost]
-		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder")] FileVM f) {
-			if(f.IsFolder) {
+		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
+			if(!ModelState.IsValid) {
+				return Json(new { success = false, html = View("_Create", f) });
+			}
+			if(f.IsFolder) { //todo: Turn this into a validation error, not an exception. (OTOH, it shouldn't happen to normal users.)
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
 			}
 			File dbf = Mapper.Map<File>(f);
 			dbf.TimeCreated = DateTime.Now;
 			dbf.TimeLastEdited = dbf.TimeCreated;
-			//todo: temporarily broke parentID assignment here.
+			dbf.ParentID = f.ParentID;
 			db.Files.Add(dbf);
 			db.SaveChanges();
-			return RedirectToAction("ViewFile");
+			string fullPath = string.Join("/", f.Path) + "/" + f.Name; //Path initially contains the parent's path.
+			TempData["LastAction"] = $"{fullPath} created!";
+			return Json(new { success = true, newPath = fullPath });
+			//return RedirectToAction("Index", new { path = fullPath });
 		}
 	}
 }

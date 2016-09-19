@@ -28,7 +28,7 @@ namespace NoteFolder.Models {
 	public class FileDbContext : DbContext {
 		public DbSet<File> Files { get; set; }
 		public FileDbContext() {
-			Database.SetInitializer(new FileTestInit());
+			//Database.SetInitializer(new FileTestInit());
 		}
 
 		/// <param name="path">The full path, including separators. Example: "foo/bar/baz". </param>

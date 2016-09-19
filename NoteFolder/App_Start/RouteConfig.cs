@@ -20,10 +20,16 @@ namespace NoteFolder
 			);
 
 			routes.MapRoute(
-                name: "Default",
-                url: "{action}",
-                defaults: new { controller = "Home", action = "Index" }
+                name: "FileAction",
+                url: "guest/{action}/files/{*path}",
+                defaults: new { controller = "File", action = "Index", path = "" }
             );
+
+			routes.MapRoute(
+				name: "Home",
+				url: "",
+				defaults: new { controller = "Home", action = "Index" }
+			);
 		}
 	}
 }
