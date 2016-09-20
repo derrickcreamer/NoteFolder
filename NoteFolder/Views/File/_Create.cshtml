@@ -1,22 +1,26 @@
 ﻿@model FileVM
 
-@using(Ajax.BeginForm("Create", "File", new AjaxOptions { OnSuccess = "checkCreateSuccess(data)" })) {
-	@Html.TextBox("Name")
-	@Html.TextBox("Description")
-	@Html.TextArea("Text")
-	@* todo: add hidden checkbox here to control file/folder. *@
-	@Html.Hidden("IsFolder")
-	@Html.Hidden("Path")
-	@Html.Hidden("ParentID")
-	<input type="submit" value="Create" />
-}
 <script type="text/javascript">
 	function checkCreateSuccess(result) {
 		if (result.success) {
-
+			window.location.reload(true);
 		}
 		else {
-
+			$('#createForm').html(result.html);
 		}
 	}
 </script>
+
+<div id="createForm">
+	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = "checkCreateSuccess(data)" })) {
+		@Html.ValidationMessage("Name")
+		@Html.TextBox("Name")
+		@Html.TextBox("Description")
+		@Html.TextArea("Text")
+		@* todo: add hidden checkbox here to control file/folder. *@
+		@Html.Hidden("IsFolder")
+		@Html.Hidden("Path")
+		@Html.Hidden("ParentID")
+		<input type="submit" value="Create" />
+	}
+</div>

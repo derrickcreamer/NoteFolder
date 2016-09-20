@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NoteFolder.ViewModels {
 	public class FileVM {
-		public int ExistingID { get; set; }
+		public int? ExistingID { get; set; }
 		[Required]
 		public string Name { get; set; }
 		public IList<string> Path { get; set; }

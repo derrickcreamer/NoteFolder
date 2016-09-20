@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using NoteFolder.Models;
 using NoteFolder.ViewModels;
-using AutoMapper;
+using NoteFolder.Extensions;
 
 namespace NoteFolder.Controllers {
 	public class FileController : Controller {
@@ -50,7 +51,7 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
 			if(!ModelState.IsValid) {
-				return Json(new { success = false, html = View("_Create", f) });
+				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Create", f) });
 			}
 			if(f.IsFolder) { //todo: Turn this into a validation error, not an exception. (OTOH, it shouldn't happen to normal users.)
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
@@ -58,13 +59,11 @@ namespace NoteFolder.Controllers {
 			File dbf = Mapper.Map<File>(f);
 			dbf.TimeCreated = DateTime.Now;
 			dbf.TimeLastEdited = dbf.TimeCreated;
-			dbf.ParentID = f.ParentID;
 			db.Files.Add(dbf);
 			db.SaveChanges();
 			string fullPath = string.Join("/", f.Path) + "/" + f.Name; //Path initially contains the parent's path.
 			TempData["LastAction"] = $"{fullPath} created!";
-			return Json(new { success = true, newPath = fullPath });
-			//return RedirectToAction("Index", new { path = fullPath });
+			return Json(new { success = true });
 		}
 	}
 }
