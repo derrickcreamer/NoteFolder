@@ -11,6 +11,7 @@ namespace NoteFolder.ViewModels {
 		public string Description { get; set; }
 		public string Text { get; set; }
 		public bool IsFolder { get; set; }
+		public bool IsRootFolder { get; set; }
 		public DateTime TimeCreated { get; set; }
 		public DateTime TimeLastEdited { get; set; }
 		public int? ParentID { get; set; }

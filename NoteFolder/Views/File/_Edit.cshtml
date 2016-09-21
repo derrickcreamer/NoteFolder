@@ -1,7 +1,7 @@
 ﻿@model FileVM
 
 @* Very similar to Create. Consider whether merging them would save time, or whether they might need to diverge in the future.*@
-@if(Model != ViewBag.RootFile) {
+@if(!Model.IsRootFolder) {
 	<div id='editForm'>
 		@using(Ajax.BeginForm("Edit", "File", new AjaxOptions { OnSuccess = $"checkAjaxSuccess(data, 'editForm')" })) {
 			@Html.ValidationMessage("Name")
@@ -17,7 +17,20 @@
 			@Html.Hidden("ExistingID")
 			<input type="submit" value="Edit" />
 		}
-		@{ string deleteMsg = Model.IsFolder? "Really delete this folder and everything within it?" : "Really delete this note?"; }
+		@{
+			string deleteMsg;
+			if(Model.IsFolder) {
+				if(Model.DirectChildren?.Count > 0){
+					deleteMsg = "Really delete this folder and everything in it?";
+				}
+				else{
+					deleteMsg = "Really delete this folder?";
+				}
+			}
+			else {
+				deleteMsg = "Really delete this note?";
+			}
+		}
 		@using(Ajax.BeginForm("Delete", "File", new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" },
 			new { onclick = $"return confirm('{deleteMsg}');" }))
 		{

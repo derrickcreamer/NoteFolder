@@ -38,7 +38,7 @@ namespace NoteFolder.Controllers {
 				foreach(var rootLevelFile in db.Files.Where(x => x.ParentID == null)) {
 					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false, rootLevelFile.Name));
 				}
-				ViewBag.RootFile = fvm;
+				fvm.IsRootFolder = true;
 				return View(fvm);
 			}
 			var sections = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);

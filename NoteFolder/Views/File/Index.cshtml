@@ -24,7 +24,7 @@
 
 		<span class="pathSeparator"> / </span>@Html.ActionLink(partialPath[i - 1], "Index", new { path = path }, new { @class = "pathWord pathLink" })
 	}
-	@if(Model != ViewBag.RootFile) {
+	@if(!Model.IsRootFolder) {
 		<span class="pathSeparator"> / </span><span class="pathWord pathName">@Model.Name</span>
 		<div class="desc">@Model.Description</div>
 		@:Created: @Model.TimeCreated
