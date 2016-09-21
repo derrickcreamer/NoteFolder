@@ -16,4 +16,8 @@ namespace NoteFolder.ViewModels {
 		public int? ParentID { get; set; }
 		public ICollection<FileVM> DirectChildren { get; set; }
 	}
+	public class DeleteFileVM {
+		public int? ExistingID { get; set; }
+		public string Path { get; set; }
+	}
 }

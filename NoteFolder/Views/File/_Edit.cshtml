@@ -17,5 +17,10 @@
 			@Html.Hidden("ExistingID")
 			<input type="submit" value="Edit" />
 		}
+		@using(Ajax.BeginForm("Delete", "File", new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" }, new { @class = "deleteBtn" })) {
+			@Html.Hidden("Path")
+			@Html.Hidden("ExistingID")
+			<input type="submit" value="Delete" />
+		}
 	</div>
 }

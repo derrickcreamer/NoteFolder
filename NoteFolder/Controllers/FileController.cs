@@ -90,5 +90,20 @@ namespace NoteFolder.Controllers {
 			TempData["LastAction"] = $"{fullPath} updated!";
 			return Json(new { success = true, path = fullPath });
 		}
+		[HttpPost]
+		public ActionResult Delete([Bind(Include = "Path, ExistingID")] DeleteFileVM f) {
+			if(!ModelState.IsValid) {
+				return Json(new { success = false, html = "" }); //todo: This could be improved for failure cases.
+			}
+			File dbf = db.Files.Find(f.ExistingID);
+			//todo: recurse
+			db.Files.Remove(dbf);
+			db.SaveChanges();
+			string parentPath = "";
+			int idx = f.Path.LastIndexOf('/');
+			if(idx != -1) parentPath = f.Path.Substring(0, idx);
+			TempData["LastAction"] = $"{f.Path} deleted!";
+			return Json(new { success = true, path = parentPath });
+		}
 	}
 }
