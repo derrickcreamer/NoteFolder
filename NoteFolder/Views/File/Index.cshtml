@@ -1,9 +1,23 @@
 ﻿@model FileVM
 
+@* todo: Decide on a good place to put bits of js like this.
+	It makes sense to keep it with the _Create view,
+	but it's more efficient to only load it once. *@
+<script type="text/javascript">
+	function checkAjaxSuccess(result, id) {
+		if (result.success) {
+			window.location.href = result.path;
+		}
+		else {
+			$('#' + id).html(result.html);
+		}
+	}
+</script>
+
 @helper DisplayFileInfo(FileVM file, int indent) {
 	<div style="margin-left: @(indent*5)%">
 		<table class="table table-condensed">
-			<tr><td>@file.Name</td></tr>
+			<tr><td>@Html.ActionLink(file.Name, "Index", new { path = file.Path })</td></tr>
 			<tr><td>@file.Description</td></tr>
 			<tr><td>@file.TimeCreated</td></tr>
 			<tr><td>@file.TimeLastEdited</td></tr>
@@ -26,24 +40,16 @@
 	}
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <div>
-		@TempData["LastAction"]
-		@if(Model.IsFolder) { @* todo: Hide forms until Create Note / Create Folder buttons are clicked *@
-			@Html.Partial("_Create", new FileVM { ParentID = Model.ExistingID, Path = Model.Path })
-		}
-		else {
-
-		}
-		@* todo: Make name & description editable for all files *@
-		@DisplayFileInfo(Model, 0)
-    </div>
-</body>
-</html>
+<div>
+	@* path, name, desc, time x2 *@
+	@TempData["LastAction"]
+	@Html.Partial("_Edit", Model)
+	@if(Model.IsFolder) { @* todo: Hide forms until buttons are clicked *@
+		@Html.Partial("_Create", new FileVM { IsFolder = true, ParentID = Model.ExistingID, Path = Model.Path })
+		@Html.Partial("_Create", new FileVM { IsFolder = false, ParentID = Model.ExistingID, Path = Model.Path })
+		@* contents *@
+	}
+	else {
+		@* text *@
+	}
+</div>

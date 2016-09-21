@@ -63,7 +63,26 @@ namespace NoteFolder.Controllers {
 			db.SaveChanges();
 			string fullPath = string.Join("/", f.Path) + "/" + f.Name; //Path initially contains the parent's path.
 			TempData["LastAction"] = $"{fullPath} created!";
-			return Json(new { success = true });
+			return Json(new { success = true, path = fullPath });
+		}
+		[HttpPost]
+		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, ExistingID")] FileVM f) {
+			if(!ModelState.IsValid) {
+				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Edit", f) });
+			}
+			if(f.IsFolder) { //todo: this should match Create.
+				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
+			}
+			File dbf = db.Files.Find(f.ExistingID);
+			dbf.Name = f.Name;
+			dbf.Description = f.Description;
+			dbf.Text = f.Text;
+			dbf.TimeLastEdited = DateTime.Now;
+			db.SaveChanges();
+			f.Path[f.Path.Count - 1] = f.Name; //If name changed, update path.
+			string fullPath = string.Join("/", f.Path);
+			TempData["LastAction"] = $"{fullPath} updated!";
+			return Json(new { success = true, path = fullPath });
 		}
 	}
 }

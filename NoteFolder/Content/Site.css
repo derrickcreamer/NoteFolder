@@ -16,3 +16,12 @@ textarea {
     max-width: 280px;
 }
 
+form {
+  border: 1px black solid;
+  padding: 10px;
+}
+label{
+  margin-right: 10px;
+  margin-left: 20px;
+}
+
