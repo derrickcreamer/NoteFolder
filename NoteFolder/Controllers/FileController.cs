@@ -95,9 +95,7 @@ namespace NoteFolder.Controllers {
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = "" }); //todo: This could be improved for failure cases.
 			}
-			File dbf = db.Files.Find(f.ExistingID);
-			//todo: recurse
-			db.Files.Remove(dbf);
+			db.DeleteFileRecursively(f.ExistingID.Value);
 			db.SaveChanges();
 			string parentPath = "";
 			int idx = f.Path.LastIndexOf('/');

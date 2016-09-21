@@ -24,9 +24,9 @@
 
 		<span class="pathSeparator"> / </span>@Html.ActionLink(partialPath[i - 1], "Index", new { path = path }, new { @class = "pathWord pathLink" })
 	}
-	<span class="pathSeparator"> / </span><span class="pathWord pathName">@Model.Name</span>
-	<div class="desc">@Model.Description</div>
-	@if(Model != ViewBag.RootFile){
+	@if(Model != ViewBag.RootFile) {
+		<span class="pathSeparator"> / </span><span class="pathWord pathName">@Model.Name</span>
+		<div class="desc">@Model.Description</div>
 		@:Created: @Model.TimeCreated
 		if(Model.TimeCreated != Model.TimeLastEdited) {
 			@: Last edited: @Model.TimeLastEdited
@@ -37,9 +37,6 @@
 	@if(Model.IsFolder) { @* todo: Hide forms until buttons are clicked *@
 		@Html.Partial("_Create", new FileVM { IsFolder = true, ParentID = Model.ExistingID, Path = Model.Path })
 		@Html.Partial("_Create", new FileVM { IsFolder = false, ParentID = Model.ExistingID, Path = Model.Path })
-	}
-	else {
-
 	}
 	@Html.Partial("_Contents", Model)
 </div>

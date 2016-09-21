@@ -17,7 +17,10 @@
 			@Html.Hidden("ExistingID")
 			<input type="submit" value="Edit" />
 		}
-		@using(Ajax.BeginForm("Delete", "File", new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" }, new { @class = "deleteBtn" })) {
+		@{ string deleteMsg = Model.IsFolder? "Really delete this folder and everything within it?" : "Really delete this note?"; }
+		@using(Ajax.BeginForm("Delete", "File", new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" },
+			new { onclick = $"return confirm('{deleteMsg}');" }))
+		{
 			@Html.Hidden("Path")
 			@Html.Hidden("ExistingID")
 			<input type="submit" value="Delete" />

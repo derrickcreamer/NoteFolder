@@ -31,6 +31,17 @@ namespace NoteFolder.Models {
 			Database.SetInitializer(new FileTestInit());
 		}
 
+		public void DeleteFileRecursively(int id) {
+			File file = Files.Find(id);
+			if(file != null) DeleteFileRecursively(file);
+		}
+		public void DeleteFileRecursively(File file) {
+			foreach(File child in file.Children.ToList()) {
+				DeleteFileRecursively(child);
+			}
+			Files.Remove(file);
+		}
+
 		/// <param name="path">The full path, including separators. Example: "foo/bar/baz". </param>
 		public File GetFileByPath(string path) => GetFileByPath(path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries));
 		/// <param name="path">A list of path sections. Example: "foo", "bar", "baz".</param>
