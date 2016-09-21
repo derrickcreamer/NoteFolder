@@ -15,13 +15,17 @@ namespace NoteFolder.Controllers {
 		/// <summary>
 		/// Maps File to FileVM while handling population of DirectChildren collection.
 		/// </summary>
-		public static FileVM FileVmFromFile(File file, bool includeDirectChildren) {
+		public static FileVM FileVmFromFile(File file, bool includeDirectChildren, string path) {
 			FileVM result = Mapper.Map<FileVM>(file);
 			result.ExistingID = file.ID;
+			result.Path = path;
 			if(includeDirectChildren) {
 				result.DirectChildren = new List<FileVM>();
 				foreach(File child in file.Children) {
-					result.DirectChildren.Add(Mapper.Map<FileVM>(child));
+					FileVM childFVM = Mapper.Map<FileVM>(child);
+					childFVM.ExistingID = child.ID;
+					childFVM.Path = result.Path + "/" + childFVM.Name;
+					result.DirectChildren.Add(childFVM);
 				}
 			}
 			return result;
@@ -29,20 +33,19 @@ namespace NoteFolder.Controllers {
 
 		public ActionResult Index(string path) {
 			if(string.IsNullOrWhiteSpace(path)) {
-				FileVM fvm = new FileVM { IsFolder = true, Name = "Files" };
+				FileVM fvm = new FileVM { IsFolder = true, Name = "Files", Path = "" };
 				fvm.DirectChildren = new List<FileVM>();
 				foreach(var rootLevelFile in db.Files.Where(x => x.ParentID == null)) {
-					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false));
+					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false, rootLevelFile.Name));
 				}
 				ViewBag.RootFile = fvm;
 				return View(fvm);
 			}
-			var sections = path.Split('/');
+			var sections = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 			File file = db.GetFileByPath(sections);
 			if(file == null) return new HttpStatusCodeResult(404); //todo, offer to create the missing files?
 			else {
-				FileVM fvm = FileVmFromFile(file, true);
-				fvm.Path = sections;
+				FileVM fvm = FileVmFromFile(file, true, path);
 				return View(fvm);
 			}
 		}
@@ -61,7 +64,9 @@ namespace NoteFolder.Controllers {
 			dbf.TimeLastEdited = dbf.TimeCreated;
 			db.Files.Add(dbf);
 			db.SaveChanges();
-			string fullPath = string.Join("/", f.Path) + "/" + f.Name; //Path initially contains the parent's path.
+			string fullPath = null;
+			if(string.IsNullOrEmpty(f.Path)) fullPath = f.Name;
+			else fullPath = f.Path + "/" + f.Name; //Path initially contains the parent's path.
 			TempData["LastAction"] = $"{fullPath} created!";
 			return Json(new { success = true, path = fullPath });
 		}
@@ -79,8 +84,9 @@ namespace NoteFolder.Controllers {
 			dbf.Text = f.Text;
 			dbf.TimeLastEdited = DateTime.Now;
 			db.SaveChanges();
-			f.Path[f.Path.Count - 1] = f.Name; //If name changed, update path.
-			string fullPath = string.Join("/", f.Path);
+			var pathSections = f.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			pathSections[pathSections.Length - 1] = f.Name; //If name changed, update path.
+			string fullPath = string.Join("/", pathSections);
 			TempData["LastAction"] = $"{fullPath} updated!";
 			return Json(new { success = true, path = fullPath });
 		}

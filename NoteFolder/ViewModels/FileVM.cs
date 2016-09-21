@@ -7,7 +7,7 @@ namespace NoteFolder.ViewModels {
 		public int? ExistingID { get; set; }
 		[Required]
 		public string Name { get; set; }
-		public IList<string> Path { get; set; }
+		public string Path { get; set; }
 		public string Description { get; set; }
 		public string Text { get; set; }
 		public bool IsFolder { get; set; }

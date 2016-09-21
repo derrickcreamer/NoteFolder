@@ -1,0 +1,21 @@
+﻿@model FileVM
+
+<div id='@("contentsFor" + Model.ExistingID.ToString())'>
+	@if(Model.IsFolder) {
+		<ul>
+			@foreach(var child in Model.DirectChildren) {
+				<li>
+					@Html.ActionLink(child.Name, "Index", new { path = child.Path })
+					@if(!string.IsNullOrEmpty(child.Description)){
+						@: ( @child.Description )
+					}
+				</li>
+			}
+		</ul>
+	}
+	else{
+		<p>
+			@Model.Text
+		</p>
+	}
+</div>

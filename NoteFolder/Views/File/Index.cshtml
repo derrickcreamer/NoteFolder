@@ -6,7 +6,7 @@
 <script type="text/javascript">
 	function checkAjaxSuccess(result, id) {
 		if (result.success) {
-			window.location.href = result.path;
+			window.location.href = '/guest/files/' + result.path; @* todo: username will go here *@
 		}
 		else {
 			$('#' + id).html(result.html);
@@ -14,42 +14,25 @@
 	}
 </script>
 
-@helper DisplayFileInfo(FileVM file, int indent) {
-	<div style="margin-left: @(indent*5)%">
-		<table class="table table-condensed">
-			<tr><td>@Html.ActionLink(file.Name, "Index", new { path = file.Path })</td></tr>
-			<tr><td>@file.Description</td></tr>
-			<tr><td>@file.TimeCreated</td></tr>
-			<tr><td>@file.TimeLastEdited</td></tr>
-			@if(file.DirectChildren != null && file.DirectChildren.Any()) {
-				<tr><td>@DisplayChildren(file.DirectChildren, indent)</td></tr>
-			}
-		</table>
-	</div>
-}
-
-@helper DisplayChildren(IEnumerable<FileVM> children, int layer) {
-	if(children != null && children.Any()) {
-		<ul>
-			@foreach(var child in children) {
-				<li>
-					@DisplayFileInfo(child, layer+1)
-				</li>
-			}
-		</ul>
-	}
-}
-
 <div>
-	@* path, name, desc, time x2 *@
+	@Html.ActionLink("Guest's files", "Index", new { path = "" })
+	@{ var pathSections = Model.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); }
+	@for(int i = 1;i<pathSections.Length;++i) {
+		string[] partialPath = new string[i];
+		Array.Copy(pathSections, partialPath, i);
+		string path = string.Join("/", partialPath);
+
+		<span class="pathSeparator"> / </span>@Html.ActionLink(partialPath[i - 1], "Index", new { path = path })
+	}
+	@* name, desc, time x2 *@
 	@TempData["LastAction"]
 	@Html.Partial("_Edit", Model)
 	@if(Model.IsFolder) { @* todo: Hide forms until buttons are clicked *@
 		@Html.Partial("_Create", new FileVM { IsFolder = true, ParentID = Model.ExistingID, Path = Model.Path })
 		@Html.Partial("_Create", new FileVM { IsFolder = false, ParentID = Model.ExistingID, Path = Model.Path })
-		@* contents *@
 	}
 	else {
-		@* text *@
+
 	}
+	@Html.Partial("_Contents", Model)
 </div>

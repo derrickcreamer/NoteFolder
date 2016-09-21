@@ -32,7 +32,7 @@ namespace NoteFolder.Models {
 		}
 
 		/// <param name="path">The full path, including separators. Example: "foo/bar/baz". </param>
-		public File GetFileByPath(string path) => GetFileByPath(path.Split('/'));
+		public File GetFileByPath(string path) => GetFileByPath(path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries));
 		/// <param name="path">A list of path sections. Example: "foo", "bar", "baz".</param>
 		public File GetFileByPath(IList<string> path) {
 			if(path.Count == 0) return null;
