@@ -5,10 +5,20 @@
 		<ul>
 			@foreach(var child in Model.DirectChildren) {
 				<li>
+					@{
+						string childContentsID = "contentsFor" + child.ExistingID.ToString();
+					}
+					@using(Ajax.BeginForm("GetContents", "File",
+						new AjaxOptions { OnSuccess = $"checkContentsSuccess(data, '{childContentsID}')" },
+						new { @class = "loadContentsBtn" })) {
+						<input type="hidden" name="Path" value="@child.Path" />
+						<input type="submit" value="(+)" />
+					}
 					@Html.ActionLink(child.Name, "Index", new { path = child.Path })
 					@if(!string.IsNullOrEmpty(child.Description)){
 						@: ( @child.Description )
 					}
+					<span id='@childContentsID'></span>
 				</li>
 			}
 		</ul>

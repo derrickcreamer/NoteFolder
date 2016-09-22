@@ -50,6 +50,13 @@ namespace NoteFolder.Controllers {
 			}
 		}
 		[HttpPost]
+		public ActionResult GetContents(string path) {
+			File file = db.GetFileByPath(path);
+			if(file == null) return Json(new { success = false });
+			FileVM fvm = FileVmFromFile(file, true, path);
+			return Json(new { success = true, html = this.GetHtmlFromPartialView("_Contents", fvm) });
+		}
+		[HttpPost]
 		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Create", f) });

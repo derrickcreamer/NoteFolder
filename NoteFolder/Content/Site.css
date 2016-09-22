@@ -1,14 +1,59 @@
-﻿.collapsible{ display: none; }
-.open { display: block; }
+﻿.collapsible{
+    display: none;
+    border: 1px black solid;
+    padding: 10px;
+}
+.open {
+    display: block;
+}
 
-#fileInfo{ position: relative; }
+#fileInfo{
+    position: relative;
+}
 .times {
     position: absolute;
     top: 0px;
     right: 0px;
     float: right;
 }
-.time{ text-align: right; }
+.time{
+    text-align: right;
+}
+
+.mainBtn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+.loadContentsBtn{
+    display: inline;
+}
+
+.createFormInput {
+}
+.createFormName{
+    display: inline;
+}
+.createFormDesc{
+    display: inline;
+}
+.createFormText { 
+}
+
+#allContents{
+    margin-top: 20px;
+}
+
+textarea {
+    width: 80em;
+    height: 10em;
+}
+
+label{
+  margin-right: 10px;
+  margin-left: 20px;
+}
+
 
 body {
     padding-top: 50px;
@@ -25,15 +70,7 @@ body {
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 400px;
 }
 
-form {
-  border: 1px black solid;
-  padding: 10px;
-}
-label{
-  margin-right: 10px;
-  margin-left: 20px;
-}
 

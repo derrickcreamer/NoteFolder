@@ -39,11 +39,16 @@
 
 @section PageScripts{
 <script type="text/javascript"> @* todo: Find a good organization scheme for scripts. *@
-	function checkAjaxSuccess(result, id) {
+	function checkUpdateSuccess(result, id) {
 		if (result.success) {
 			window.location.href = '/guest/files/' + result.path; @* todo: username will go here *@
 		}
 		else {
+			$('#' + id).replaceWith(result.html);
+		}
+	}
+	function checkContentsSuccess(result, id) {
+		if (result.success) {
 			$('#' + id).replaceWith(result.html);
 		}
 	}

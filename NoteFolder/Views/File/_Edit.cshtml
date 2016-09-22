@@ -2,7 +2,7 @@
 
 @{ string openClass = IsAjax? "open" : null; }
 <div id='editForm' class='collapsible @openClass'>
-	@using(Ajax.BeginForm("Edit", "File", new AjaxOptions { OnSuccess = $"checkAjaxSuccess(data, 'editForm')" })) {
+	@using(Ajax.BeginForm("Edit", "File", new AjaxOptions { OnSuccess = $"checkUpdateSuccess(data, 'editForm')" })) {
 		@Html.ValidationMessage("Name")
 		@Html.Label("Name")
 		@Html.TextBox("Name")

@@ -7,15 +7,21 @@
 }
 
 <div id='@divID' class='collapsible @openClass'>
-	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = $"checkAjaxSuccess(data, '{divID}')" })) {
-		@Html.ValidationMessage("Name")
-		@Html.Label("Name")
-		@Html.TextBox("Name")
-		@Html.Label("Description")
-		@Html.TextBox("Description")
+	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = $"checkUpdateSuccess(data, '{divID}')" })) {
+		<div class="createFormName createFormInput">
+			@Html.ValidationMessage("Name")
+			@Html.Label("Name")
+			@Html.TextBox("Name")
+		</div>
+		<div class="createFormDesc createFormInput">
+			@Html.Label("Description")
+			@Html.TextBox("Description")
+		</div>
 		if(!Model.IsFolder) {
-			@Html.Label("Text")
-			@Html.TextArea("Text")
+			<div class="createFormText createFormInput">
+				@Html.Label("Text")
+				@Html.TextArea("Text")
+			</div>
 		}
 		@Html.Hidden("IsFolder")
 		@Html.Hidden("Path")
