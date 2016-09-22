@@ -49,8 +49,6 @@ namespace NoteFolder.Controllers {
 				return View(fvm);
 			}
 		}
-		//todo: New Note button has inputs for name, desc. isFolder and path might be hidden and included?
-		//New Folder has the same.
 		[HttpPost]
 		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
 			if(!ModelState.IsValid) {
@@ -71,7 +69,7 @@ namespace NoteFolder.Controllers {
 			return Json(new { success = true, path = fullPath });
 		}
 		[HttpPost]
-		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, ExistingID")] FileVM f) {
+		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, IsFolder, ExistingID")] FileVM f) {
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Edit", f) });
 			}

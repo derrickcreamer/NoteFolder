@@ -1,4 +1,16 @@
-﻿body {
+﻿.collapsible{ display: none; }
+.open { display: block; }
+
+#fileInfo{ position: relative; }
+.times {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    float: right;
+}
+.time{ text-align: right; }
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }

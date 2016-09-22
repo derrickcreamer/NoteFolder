@@ -3,9 +3,10 @@
 @{
 	string divID = Model.IsFolder? "createFolderForm" : "createNoteForm";
 	string submitString = Model.IsFolder? "Create Folder" : "Create Note";
+	string openClass = IsAjax? "open" : null;
 }
 
-<div id='@divID'>
+<div id='@divID' class='collapsible @openClass'>
 	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = $"checkAjaxSuccess(data, '{divID}')" })) {
 		@Html.ValidationMessage("Name")
 		@Html.Label("Name")
