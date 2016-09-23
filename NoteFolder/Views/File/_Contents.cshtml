@@ -10,11 +10,11 @@
 					}
 					<form class="loadContentsForm" id='@childBaseID'>
 						<input type="hidden" name="Path" value="@child.Path" />
-						<input class="loadContentsBtn" type="submit" value="(+)" />
+						<button class="loadContentsBtn btn" type="submit">+</button>
 					</form>
-					@Html.ActionLink(child.Name, "Index", new { path = child.Path })
+					@Html.ActionLink(child.Name, "Index", new { path = child.Path }, new { @class = "contentNameLink" })
 					@if(!string.IsNullOrEmpty(child.Description)){
-						@: ( @child.Description )
+						<span class="contentDesc">@child.Description</span>
 					}
 					<span id='@("contents" + childBaseID)'></span>
 				</li>
@@ -22,7 +22,7 @@
 		</ul>
 	}
 	else{
-		<p>
+		<p class="noteText">
 			@Model.Text
 		</p>
 	}

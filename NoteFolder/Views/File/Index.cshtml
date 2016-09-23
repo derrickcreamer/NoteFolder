@@ -22,12 +22,12 @@
 	}
 	@TempData["LastAction"]
 	@if(!Model.IsRootFolder) {
-		<input type="button" id="editBtn" class="mainBtn" value="Edit @Model.Name" />
+		<button type="button" id="editBtn" class="mainBtn btn">Edit @Model.Name</button>
 		@Html.Partial("_Edit", Model)
 	}
 	@if(Model.IsFolder) {
-		<input type="button" id="newFolderBtn" class="mainBtn" value="New Folder" />
-		<input type="button" id="newNoteBtn" class="mainBtn" value="New Note" />
+		<button type="button" id="newFolderBtn" class="mainBtn btn">New Folder</button>
+		<button type="button" id="newNoteBtn" class="mainBtn btn">New Note</button>
 		@Html.Partial("_Create", new FileVM { IsFolder = true, ParentID = Model.ExistingID, Path = Model.Path })
 		@Html.Partial("_Create", new FileVM { IsFolder = false, ParentID = Model.ExistingID, Path = Model.Path })
 	}
@@ -49,12 +49,16 @@
 	}
 	$(document).on('click', '.loadContentsBtn', function (e) {
 		e.preventDefault();
-		var form = $(e.target).parent();
+		var button = $(e.target);
+		var form = button.parent();
 		var contents = $("#contents" + form.attr('id'));
 		if (contents[0].nodeName == "DIV") { // if it's a div, it's already loaded.
+			if (button.text() == "+") button.text("-");
+			else button.text("+");
 			contents.toggle();
 		}
 		else {
+			button.text("-");
 			$.ajax({
 				type: 'POST',
 				url: '@Url.Action("GetContents","File")',

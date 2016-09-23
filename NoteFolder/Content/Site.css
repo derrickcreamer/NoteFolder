@@ -20,6 +20,10 @@
     text-align: right;
 }
 
+.btn{
+    outline: none !important;
+    background: #ffb000;
+}
 .mainBtn {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -29,6 +33,13 @@
     display: inline;
 }
 .loadContentsBtn{
+    font-weight: bold;
+    line-height: 0px;
+    padding: 0px 0px;
+    margin: 5px 0px;
+    width: 1.6em;
+    height: 1.6em;
+    border-radius: 2.5em;
 }
 
 .createFormInput {
@@ -45,7 +56,28 @@
 #allContents{
     margin-top: 20px;
 }
+.contentNameLink{
+    font-weight: bold;
+    margin-left: 10px;
+}
+.contentDesc{
+    padding: 2px 8px;
+    margin-left: 20px;
+    background: #dfdfff;
+    font-style: italic;
+    border-radius: 5px;
+}
+.noteText{
+    padding: 2px 4px;
+    display: inline-block;
+    margin-left: 20px;
+    background: #ffff9f;
+}
 
+
+ul{
+    list-style: none;
+}
 textarea {
     width: 80em;
     height: 10em;

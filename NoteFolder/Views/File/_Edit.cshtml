@@ -15,7 +15,7 @@
 		@Html.Hidden("Path")
 		@Html.Hidden("IsFolder")
 		@Html.Hidden("ExistingID")
-		<input type="submit" value="Edit" />
+		<button class="btn" type="submit">Edit</button>
 	}
 	@{
 		@* todo: There's a bug here: DirectChildren is not populated after the initial call,
@@ -37,6 +37,6 @@
 					new { onclick = $"return confirm('{deleteMsg}');" })) {
 		@Html.Hidden("Path")
 		@Html.Hidden("ExistingID")
-		<input type="submit" value="Delete" />
+		<button class="btn" type="submit">Delete</button>
 	}
 </div>
