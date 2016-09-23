@@ -6,19 +6,17 @@
 			@foreach(var child in Model.DirectChildren) {
 				<li>
 					@{
-						string childContentsID = "contentsFor" + child.ExistingID.ToString();
+						string childBaseID = "For" + child.ExistingID.ToString();
 					}
-					@using(Ajax.BeginForm("GetContents", "File",
-						new AjaxOptions { OnSuccess = $"checkContentsSuccess(data, '{childContentsID}')" },
-						new { @class = "loadContentsBtn" })) {
+					<form class="loadContentsForm" id='@childBaseID'>
 						<input type="hidden" name="Path" value="@child.Path" />
-						<input type="submit" value="(+)" />
-					}
+						<input class="loadContentsBtn" type="submit" value="(+)" />
+					</form>
 					@Html.ActionLink(child.Name, "Index", new { path = child.Path })
 					@if(!string.IsNullOrEmpty(child.Description)){
 						@: ( @child.Description )
 					}
-					<span id='@childContentsID'></span>
+					<span id='@("contents" + childBaseID)'></span>
 				</li>
 			}
 		</ul>

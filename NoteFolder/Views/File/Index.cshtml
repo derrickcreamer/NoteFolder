@@ -47,19 +47,37 @@
 			$('#' + id).replaceWith(result.html);
 		}
 	}
-	function checkContentsSuccess(result, id) {
-		if (result.success) {
-			$('#' + id).replaceWith(result.html);
+	$(document).on('click', '.loadContentsBtn', function (e) {
+		e.preventDefault();
+		var form = $(e.target).parent();
+		var contents = $("#contents" + form.attr('id'));
+		if (contents[0].nodeName == "DIV") { // if it's a div, it's already loaded.
+			contents.toggle();
 		}
-	}
-	$('#editBtn').click(function () {
+		else {
+			$.ajax({
+				type: 'POST',
+				url: '@Url.Action("GetContents","File")',
+				data: form.serialize(),
+				success: function (result) {
+					if (result.success) {
+						contents.replaceWith(result.html);
+					}
+				}
+			});
+		}
+	});
+	$('#editBtn').click(function (e) {
+		e.preventDefault();
 		$('#editForm').toggle()
 	});
-	$('#newFolderBtn').click(function () {
+	$('#newFolderBtn').click(function (e) {
+		e.preventDefault();
 		$('#createFolderForm').toggle();
 		$('#createNoteForm').toggle(false);
 	});
-	$('#newNoteBtn').click(function () {
+	$('#newNoteBtn').click(function (e) {
+		e.preventDefault();
 		$('#createNoteForm').toggle();
 		$('#createFolderForm').toggle(false);
 	});

@@ -33,7 +33,7 @@
 		deleteMsg = "Really delete this note?";
 	}
 	}
-	@using(Ajax.BeginForm("Delete", "File", new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" },
+	@using(Ajax.BeginForm("Delete", "File", null, new AjaxOptions { OnSuccess = "checkAjaxSuccess(data, 'editForm')" },
 					new { onclick = $"return confirm('{deleteMsg}');" })) {
 		@Html.Hidden("Path")
 		@Html.Hidden("ExistingID")
