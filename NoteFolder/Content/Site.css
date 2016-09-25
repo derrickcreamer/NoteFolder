@@ -62,10 +62,10 @@
 }
 .contentDesc{
     padding: 2px 8px;
-    margin-left: 20px;
+    margin-left: 160px;
     background: #dfdfff;
     font-style: italic;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 .noteText{
     padding: 2px 4px;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace NoteFolder.Models {
 	public class FileTestInit : DropCreateDatabaseAlways<FileDbContext> {
@@ -25,9 +26,9 @@ namespace NoteFolder.Models {
 			return new File(parent, true, name, desc);
 		}
 	}
-	public class FileDbContext : DbContext {
+	public class FileDbContext : IdentityDbContext<IdentityUser> {
 		public DbSet<File> Files { get; set; }
-		public FileDbContext() {
+		public FileDbContext() : base("NoteFolder.Models.FileDbContext") {
 			Database.SetInitializer(new FileTestInit());
 		}
 
