@@ -1,0 +1,12 @@
+﻿@model LogInVM
+
+<h2>Log In</h2>
+
+@Html.ValidationSummary(false)
+
+@using(Html.BeginForm()) {
+	@Html.TextBoxFor(x => x.Email)
+	@Html.PasswordFor(x => x.Password)
+	@Html.HiddenFor(x => x.ReturnURL)
+	<button type="submit">Log In</button>
+}

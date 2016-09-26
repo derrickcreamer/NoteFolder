@@ -23,6 +23,14 @@
                 <ul class="nav navbar-nav">
                 </ul>
             </div>
+			@if(User.Identity.IsAuthenticated) {
+				using(Html.BeginForm("LogOut", "Auth")) {
+					<button class="logInOutBtn btn" type="submit">Log Out</button>
+				}
+			}
+			else {
+				@Html.ActionLink("Log In", "Login", "Auth", null, new { @class = "logInOutBtn btn" })
+			}
         </div>
     </div>
 

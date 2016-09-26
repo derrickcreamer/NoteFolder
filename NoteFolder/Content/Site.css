@@ -24,6 +24,12 @@
     outline: none !important;
     background: #ffb000;
 }
+.logInOutBtn{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 8px;
+}
 .mainBtn {
     margin-top: 20px;
     margin-bottom: 20px;

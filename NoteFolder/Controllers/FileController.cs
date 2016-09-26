@@ -10,7 +10,7 @@ using NoteFolder.Extensions;
 
 namespace NoteFolder.Controllers {
 	public class FileController : Controller {
-		private FileDbContext db = new FileDbContext();
+		private AppDbContext db = new AppDbContext();
 
 		/// <summary>
 		/// Maps File to FileVM while handling population of DirectChildren collection.
