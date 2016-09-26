@@ -1,0 +1,19 @@
+﻿@model LogInVM
+
+@{
+    //ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+@Html.ValidationSummary(false)
+
+@using(Html.BeginForm()) {
+	@Html.LabelFor(x => x.Email)
+	@Html.TextBoxFor(x => x.Email)
+	@Html.LabelFor(x => x.Password)
+	@Html.PasswordFor(x => x.Password)
+	@Html.HiddenFor(x => x.ReturnURL)
+	<button class="btn" type="submit">Register</button>
+}
+

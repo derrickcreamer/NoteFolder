@@ -35,6 +35,9 @@
     </div>
 
     <div class="container body-content">
+		@if(TempData.ContainsKey("LastAction")) {
+			<div id="lastAction">@TempData["LastAction"]</div>
+		}
         @RenderBody()
         <hr />
         <footer>
