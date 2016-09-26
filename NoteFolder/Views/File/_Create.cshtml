@@ -8,6 +8,7 @@
 
 <div id='@divID' class='collapsible @openClass'>
 	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = $"checkUpdateSuccess(data, '{divID}')" })) {
+		@Html.AntiForgeryToken()
 		<div class="createFormName createFormInput">
 			@Html.ValidationMessage("Name")
 			@Html.Label("Name")

@@ -56,6 +56,7 @@ namespace NoteFolder.Controllers {
 			FileVM fvm = FileVmFromFile(file, true, path);
 			return Json(new { success = true, html = this.GetHtmlFromPartialView("_Contents", fvm) });
 		}
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
 			if(!ModelState.IsValid) {
@@ -75,6 +76,7 @@ namespace NoteFolder.Controllers {
 			TempData["LastAction"] = $"{fullPath} created!";
 			return Json(new { success = true, path = fullPath });
 		}
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, IsFolder, ExistingID")] FileVM f) {
 			if(!ModelState.IsValid) {
@@ -95,6 +97,7 @@ namespace NoteFolder.Controllers {
 			TempData["LastAction"] = $"{fullPath} updated!";
 			return Json(new { success = true, path = fullPath });
 		}
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Delete([Bind(Include = "Path, ExistingID")] DeleteFileVM f) {
 			if(!ModelState.IsValid) {

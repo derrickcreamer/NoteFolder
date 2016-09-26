@@ -1,0 +1,25 @@
+﻿@model FileVM
+
+@{
+	@* todo: There's a bug here: DirectChildren is not populated after the initial call,
+		so the ajax call can't use it. This means that the confirmation message can be wrong after a bad edit. *@
+	string deleteMsg;
+	if(Model.IsFolder) {
+		if(Model.DirectChildren?.Count > 0) {
+			deleteMsg = "Really delete this folder and everything in it?";
+		}
+		else {
+			deleteMsg = "Really delete this folder?";
+		}
+	}
+	else {
+		deleteMsg = "Really delete this note?";
+	}
+}
+@using(Ajax.BeginForm("Delete", "File", null, new AjaxOptions { OnSuccess = "checkUpdateSuccess(data, 'editForm')" },
+										new { onclick = $"return confirm('{deleteMsg}');" })) {
+	@Html.AntiForgeryToken()
+	@Html.Hidden("Path")
+	@Html.Hidden("ExistingID")
+	<button class="btn" type="submit">Delete</button>
+}

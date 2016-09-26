@@ -5,6 +5,7 @@
 @Html.ValidationSummary(false)
 
 @using(Html.BeginForm()) {
+	@Html.AntiForgeryToken()
 	@Html.LabelFor(x => x.Email)
 	@Html.TextBoxFor(x => x.Email)
 	@Html.LabelFor(x => x.Password)

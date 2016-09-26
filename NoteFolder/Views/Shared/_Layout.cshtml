@@ -25,6 +25,7 @@
             </div>
 			@if(User.Identity.IsAuthenticated) {
 				using(Html.BeginForm("LogOut", "Auth")) {
+					@Html.AntiForgeryToken()
 					<button class="logInOutBtn btn" type="submit">Log Out</button>
 				}
 			}

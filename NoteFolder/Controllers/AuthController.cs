@@ -19,6 +19,7 @@ namespace NoteFolder.Controllers {
 		public ActionResult LogIn(string returnURL) => View(new LogInVM { ReturnURL = returnURL });
 
 		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult LogIn(LogInVM login) {
 			if(!ModelState.IsValid) return View(login);
@@ -39,6 +40,7 @@ namespace NoteFolder.Controllers {
 			Request.GetOwinContext().Authentication.SignIn(idCookie);
 		}
 
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult LogOut() {
 			Request.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
@@ -50,6 +52,7 @@ namespace NoteFolder.Controllers {
 		public ActionResult Register(string returnURL) => View(new LogInVM { ReturnURL = returnURL });
 
 		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Register(LogInVM register) { //todo: Take another look at whether register & login VMs are the same.
 			if(!ModelState.IsValid) return View(register);
