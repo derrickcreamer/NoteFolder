@@ -15,7 +15,7 @@ namespace NoteFolder.Controllers {
 		/// <summary>
 		/// Maps File to FileVM while handling population of DirectChildren collection.
 		/// </summary>
-		public static FileVM FileVmFromFile(File file, bool includeDirectChildren, string path) {
+		protected static FileVM FileVmFromFile(File file, bool includeDirectChildren, string path) {
 			FileVM result = Mapper.Map<FileVM>(file);
 			result.ExistingID = file.ID;
 			result.Path = path;
@@ -27,8 +27,16 @@ namespace NoteFolder.Controllers {
 					childFVM.Path = result.Path + "/" + childFVM.Name;
 					result.DirectChildren.Add(childFVM);
 				}
+				SortFiles(result.DirectChildren);
 			}
 			return result;
+		}
+		protected static void SortFiles(List<FileVM> list) {
+			list.Sort((a, b) => {
+				int typeDiff = -a.IsFolder.CompareTo(b.IsFolder); // Folders first
+				if(typeDiff == 0) return string.Compare(a.Name, b.Name, true); // Then sort each group alphabetically
+				return typeDiff;
+			});
 		}
 
 		public ActionResult Index(string path) {
@@ -38,6 +46,7 @@ namespace NoteFolder.Controllers {
 				foreach(var rootLevelFile in db.Files.Where(x => x.ParentID == null)) {
 					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false, rootLevelFile.Name));
 				}
+				SortFiles(fvm.DirectChildren);
 				fvm.IsRootFolder = true;
 				return View(fvm);
 			}

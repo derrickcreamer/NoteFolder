@@ -19,8 +19,6 @@
 				<div class="time">Last edited: @Model.TimeLastEdited</div>
 			}
 		</div>
-	}
-	@if(!Model.IsRootFolder) {
 		<button type="button" id="editBtn" class="mainBtn btn">Edit @Model.Name</button>
 		@Html.Partial("_Edit", Model)
 	}

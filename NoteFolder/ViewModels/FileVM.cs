@@ -21,7 +21,7 @@ namespace NoteFolder.ViewModels {
 		public DateTime TimeCreated { get; set; }
 		public DateTime TimeLastEdited { get; set; }
 		public int? ParentID { get; set; }
-		public ICollection<FileVM> DirectChildren { get; set; }
+		public List<FileVM> DirectChildren { get; set; }
 	}
 	public class DeleteFileVM {
 		[Required]
