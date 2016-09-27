@@ -7,7 +7,7 @@ namespace NoteFolder.ViewModels {
 	public class FileVM {
 		public int? ExistingID { get; set; }
 		[Required]
-		[RegularExpression(@"^[\w~ -]+$", ErrorMessage = "File names must consist only of letters, numbers, spaces, or these 3 characters:  _ - ~ ")]
+		[RegularExpression(@"^[\w -]+$", ErrorMessage = "File names must consist only of letters, numbers, spaces, hyphens, or underscores.")]
 		[AllowHtml]
 		public string Name { get; set; }
 		[AllowHtml]

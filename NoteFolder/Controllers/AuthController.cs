@@ -25,9 +25,9 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult LogIn(LogInVM login) {
 			if(!ModelState.IsValid) return View(login);
-			var user = UserManager.Find(login.Email, login.Password);
+			var user = UserManager.Find(login.UserName, login.Password);
 			if(user == null) {
-				ModelState.AddModelError("", "Invalid email or password. Please try again.");
+				ModelState.AddModelError("", "Invalid username or password. Please try again.");
 				return View(login);
 			}
 			SignIn(user);
@@ -61,14 +61,14 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult Register(LogInVM register) { //todo: Take another look at whether register & login VMs are the same.
 			if(!ModelState.IsValid) return View(register);
-			var user = new IdentityUser { UserName = register.Email };
+			var user = new IdentityUser { UserName = register.UserName };
 			var result = UserManager.Create(user, register.Password);
 			if(!result.Succeeded) {
 				foreach(var error in result.Errors) ModelState.AddModelError("", error);
 				return View(register);
 			}
 			SignIn(user);
-			TempData["LastAction"] = "Account created!";
+			TempData["LastAction"] = $"Account created! Welcome, {register.UserName}.";
 			return RedirectToLocal(register.ReturnURL);
 		}
 	}
