@@ -75,6 +75,7 @@
 .contentNameLink{
     font-weight: bold;
     margin-left: 10px;
+    white-space: pre-wrap;
 }
 .contentDesc{
     padding: 2px 8px;
@@ -88,6 +89,7 @@
     display: inline-block;
     margin-left: 20px;
     background: #ffff9f;
+    white-space: pre-wrap;
 }
 
 

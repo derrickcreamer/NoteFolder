@@ -65,6 +65,12 @@ namespace NoteFolder.Controllers {
 			if(f.IsFolder) { //todo: Turn this into a validation error, not an exception. (OTOH, it shouldn't happen to normal users.)
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
 			}
+			f.Name = f.Name.Trim();
+			File existingFile = db.Files.Where(x => x.Name == f.Name).SingleOrDefault();
+			if(existingFile != null) {
+				ModelState.AddModelError("Name", "A file already exists here with this name.");
+				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Create", f) });
+			}
 			File dbf = Mapper.Map<File>(f);
 			dbf.TimeCreated = DateTime.Now;
 			dbf.TimeLastEdited = dbf.TimeCreated;
@@ -84,6 +90,12 @@ namespace NoteFolder.Controllers {
 			}
 			if(f.IsFolder) { //todo: this should match Create.
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
+			}
+			f.Name = f.Name.Trim();
+			File existingFile = db.Files.Where(x => x.Name == f.Name && x.ID != f.ExistingID).SingleOrDefault();
+			if(existingFile != null) {
+				ModelState.AddModelError("Name", "A file already exists here with this name.");
+				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Edit", f) });
 			}
 			File dbf = db.Files.Find(f.ExistingID);
 			dbf.Name = f.Name;
