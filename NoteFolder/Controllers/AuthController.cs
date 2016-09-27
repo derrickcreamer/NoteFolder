@@ -16,7 +16,10 @@ namespace NoteFolder.Controllers {
 		}
 
 		[AllowAnonymous]
-		public ActionResult LogIn(string returnURL) => View(new LogInVM { ReturnURL = returnURL });
+		public ActionResult LogIn(string returnURL) {
+			if(User.Identity.IsAuthenticated) return RedirectToLocal(returnURL); //todo: Could redirect to user account page.
+			else return View(new LogInVM { ReturnURL = returnURL });
+		}
 
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
@@ -49,7 +52,10 @@ namespace NoteFolder.Controllers {
 		}
 
 		[AllowAnonymous]
-		public ActionResult Register(string returnURL) => View(new LogInVM { ReturnURL = returnURL });
+		public ActionResult Register(string returnURL) {
+			if(User.Identity.IsAuthenticated) return RedirectToLocal(returnURL); //todo: same as Login above - user page?
+			else return View(new LogInVM { ReturnURL = returnURL });
+		}
 
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]

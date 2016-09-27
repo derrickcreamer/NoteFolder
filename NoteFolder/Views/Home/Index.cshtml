@@ -6,5 +6,6 @@
 <h2>Index</h2>
 
 @if(User.Identity.IsAuthenticated) {
-	<p>Logged in!</p>
+	<p>You are currently logged in.</p>
+	@* todo: Eventually display user data near the Log Out button, not here. *@
 }
