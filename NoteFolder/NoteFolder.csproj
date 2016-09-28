@@ -166,7 +166,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
-    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
@@ -194,8 +194,8 @@
     <Content Include="Views\File\_Create.cshtml" />
     <Content Include="Views\File\_Edit.cshtml" />
     <Content Include="Views\File\_Contents.cshtml" />
-    <Content Include="Views\Auth\LogIn.cshtml" />
-    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\User\LogIn.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\File\_Delete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

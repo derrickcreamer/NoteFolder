@@ -12,7 +12,7 @@
 						<input type="hidden" name="Path" value="@child.Path" />
 						<button class="loadContentsBtn btn" type="submit">+</button>
 					</form>
-					@Html.ActionLink(child.Name, "Index", new { path = child.Path }, new { @class = "contentNameLink" })
+					@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink" })
 					@if(!string.IsNullOrEmpty(child.Description)){
 						<span class="contentDesc">@child.Description</span>
 					}

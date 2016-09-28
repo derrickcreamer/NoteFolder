@@ -24,13 +24,13 @@
                 </ul>
             </div>
 			@if(User.Identity.IsAuthenticated) {
-				using(Html.BeginForm("LogOut", "Auth")) {
+				using(Html.BeginForm("LogOut", "User")) {
 					@Html.AntiForgeryToken()
 					<button class="logInOutBtn btn" type="submit">Log Out</button>
 				}
 			}
 			else {
-				@Html.ActionLink("Log In", "Login", "Auth", null, new { @class = "logInOutBtn btn", id = "mainLogInBtn" })
+				@Html.ActionLink("Log In", "Login", "User", null, new { @class = "logInOutBtn btn", id = "mainLogInBtn" })
 			}
         </div>
     </div>

@@ -15,7 +15,7 @@
 }
 
 <div id="registerForm">
-	@using(Html.BeginForm("Register", "Auth", FormMethod.Get)) {
+	@using(Html.BeginForm("Register", "User", FormMethod.Get)) {
 		<input type="hidden" name="returnURL" value="@Model.ReturnURL" />
 		<button class="btn" type="submit">Register a new account</button>
 	}

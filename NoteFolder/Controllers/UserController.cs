@@ -7,9 +7,9 @@ using NoteFolder.Models;
 using NoteFolder.ViewModels;
 
 namespace NoteFolder.Controllers {
-	public class AuthController : Controller {
+	public class UserController : Controller {
 		private UserManager<IdentityUser> UserManager;
-		public AuthController() {
+		public UserController() {
 			UserManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new AppDbContext()));
 			UserManager.UserValidator = new UserValidator<IdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
 		}
@@ -71,5 +71,7 @@ namespace NoteFolder.Controllers {
 			TempData["LastAction"] = $"Account created! Welcome, {register.UserName}.";
 			return RedirectToLocal(register.ReturnURL);
 		}
+
+		public ActionResult ShorthandRedirect(string user) => RedirectToActionPermanent("Index", "File", new { user = user });
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using AutoMapper;
 using NoteFolder.Models;
 using NoteFolder.ViewModels;
@@ -37,8 +38,22 @@ namespace NoteFolder.Controllers {
 				return typeDiff;
 			});
 		}
+		protected bool VerifyFileAccess(string targetUser, string path) {
+			try {
+				return string.Compare(targetUser, User.Identity.Name, true) == 0; // Verify same user
+			}
+			//todo: This method will change if users can ever mark their files 'public' or otherwise share them.
+			// Currently, users have access only to their own files.
+			// Eventually, this method might check user existence, user role(s), file existence, and file permissions.
+			catch {
+				throw new InvalidOperationException("Access denied."); // Don't let any exceptions leak information here.
+			}
+		}
 
-		public ActionResult Index(string path) {
+		public ActionResult Index(string user, string path) {
+			if(!VerifyFileAccess(user, path)) {
+				return RedirectToAction("Index", "File", new { user = User.Identity.Name, path = path });
+			}
 			if(string.IsNullOrWhiteSpace(path)) {
 				FileVM fvm = new FileVM { IsFolder = true, Name = "Files", Path = "" };
 				fvm.DirectChildren = new List<FileVM>();
@@ -58,7 +73,8 @@ namespace NoteFolder.Controllers {
 			}
 		}
 		[HttpPost]
-		public ActionResult GetContents(string path) {
+		public ActionResult GetContents(string user, string path) {
+			if(!VerifyFileAccess(user, path)) return Json(new { success = false });
 			File file = db.GetFileByPath(path);
 			if(file == null) return Json(new { success = false });
 			FileVM fvm = FileVmFromFile(file, true, path);
