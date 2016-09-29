@@ -8,10 +8,10 @@ using NoteFolder.ViewModels;
 
 namespace NoteFolder.Controllers {
 	public class UserController : Controller {
-		private UserManager<IdentityUser> UserManager;
+		private UserManager<User> UserManager;
 		public UserController() {
-			UserManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new AppDbContext()));
-			UserManager.UserValidator = new UserValidator<IdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
+			UserManager = new UserManager<User>(new UserStore<User>(new AppDbContext()));
+			UserManager.UserValidator = new UserValidator<User>(UserManager) { AllowOnlyAlphanumericUserNames = false };
 		}
 
 		[AllowAnonymous]
@@ -37,7 +37,7 @@ namespace NoteFolder.Controllers {
 			if(string.IsNullOrWhiteSpace(returnURL) || !Url.IsLocalUrl(returnURL)) return RedirectToAction("Index", "Home");
 			else return Redirect(returnURL);
 		}
-		protected void SignIn(IdentityUser user) {
+		protected void SignIn(User user) {
 			var idCookie = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
 			Request.GetOwinContext().Authentication.SignIn(idCookie);
 		}
@@ -61,7 +61,7 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult Register(LogInVM register) { //todo: Take another look at whether register & login VMs are the same.
 			if(!ModelState.IsValid) return View(register);
-			var user = new IdentityUser { UserName = register.UserName };
+			var user = new User { UserName = register.UserName };
 			var result = UserManager.Create(user, register.Password);
 			if(!result.Succeeded) {
 				foreach(var error in result.Errors) ModelState.AddModelError("", error);

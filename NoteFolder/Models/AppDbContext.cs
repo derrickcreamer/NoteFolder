@@ -7,16 +7,19 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace NoteFolder.Models {
 	public class FileInit : DropCreateDatabaseAlways<AppDbContext> {
 		protected override void Seed(AppDbContext db) {
+			var user = new User { UserName = "guest" };
 			var docs = FileModelExtensions.AddFolder(null, "Documents");
+			docs.User = user;
 			var proj = docs.AddFolder("Projects");
 			var nf = proj.AddFolder("NoteFolder", desc: "Note organization");
-			var notes = nf.AddNote("NoteFolderNotes", text: "<full note text here>");
-			var ideas = proj.AddNote("ProjectIdeas", desc: "Only the best!", text: "<full text of project ideas note here>");
+			var notes = nf.AddNote("NoteFolderNotes", text: "This is the full text\r\nof NoteFolderNotes.");
+			var ideas = proj.AddNote("ProjectIdeas", desc: "Only the best!", text: "<full list of ideas here>");
+			db.Users.Add(user);
 			db.Files.AddRange(new File[] { docs, proj, nf, notes, ideas });
 			base.Seed(db);
 		}
 	}
-	public class AppDbContext : IdentityDbContext<IdentityUser> {
+	public class AppDbContext : IdentityDbContext<User> {
 		public DbSet<File> Files { get; set; }
 		public AppDbContext() : base("NoteFolder.Models.AppDbContext") {
 			Database.SetInitializer(new FileInit());

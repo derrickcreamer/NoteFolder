@@ -21,9 +21,14 @@ namespace NoteFolder.Models {
 
 		public virtual ICollection<File> Children { get; set; } = new List<File>();
 
+		public string UserID { get; set; }
+
+		public virtual User User { get; set; }
+
 		public File() { }
 		public File(File parent, bool isFolder, string name, string desc = null, string text = null, DateTime? time = null) {
 			Parent = parent;
+			if(parent != null) User = parent.User;
 			IsFolder = isFolder;
 			Name = name;
 			Description = desc;
