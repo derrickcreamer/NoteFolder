@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NoteFolder.Models;
 using NoteFolder.ViewModels;
@@ -11,7 +12,18 @@ using NoteFolder.Extensions;
 
 namespace NoteFolder.Controllers {
 	public class FileController : Controller {
-		private AppDbContext db => HttpContext.GetOwinContext().Get<AppDbContext>();
+		protected AppDbContext db => HttpContext.GetOwinContext().Get<AppDbContext>();
+
+		protected IQueryable<File> CurrentUserFiles {
+			get {
+				string userID = User.Identity.GetUserId();
+				return db.Files.Where(x => x.UserID == userID);
+			}
+		}
+
+		//todo: Figure out the best way to handle access denial.
+		//			Which ones should redirect? Which should throw? Which exceptions get caught and turned into redirects?
+		protected void AccessFailed() {  throw new InvalidOperationException("Access denied."); }
 
 		/// <summary>
 		/// Maps File to FileVM while handling population of DirectChildren collection.
@@ -47,9 +59,11 @@ namespace NoteFolder.Controllers {
 			// Currently, users have access only to their own files.
 			// Eventually, this method might check user existence, user role(s), file existence, and file permissions.
 			catch {
-				throw new InvalidOperationException("Access denied."); // Don't let any exceptions leak information here.
+				AccessFailed(); // Don't let any exceptions leak information here.
+				return false;
 			}
 		}
+		protected bool VerifyFileOwnership(int fileID) => CurrentUserFiles.Where(x => x.ID == fileID).Any();
 
 		public ActionResult Index(string user, string path) {
 			if(!VerifyFileAccess(user, path)) {
@@ -58,7 +72,7 @@ namespace NoteFolder.Controllers {
 			if(string.IsNullOrWhiteSpace(path)) {
 				FileVM fvm = new FileVM { IsFolder = true, Name = "Files", Path = "" };
 				fvm.DirectChildren = new List<FileVM>();
-				foreach(var rootLevelFile in db.Files.Where(x => x.ParentID == null)) {
+				foreach(var rootLevelFile in CurrentUserFiles.Where(x => x.ParentID == null)) {
 					fvm.DirectChildren.Add(FileVmFromFile(rootLevelFile, false, rootLevelFile.Name));
 				}
 				SortFiles(fvm.DirectChildren);
@@ -66,7 +80,7 @@ namespace NoteFolder.Controllers {
 				return View(fvm);
 			}
 			var sections = path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-			File file = db.GetFileByPath(sections);
+			File file = db.GetFileByPath(User.Identity.GetUserId(), sections);
 			if(file == null) return new HttpStatusCodeResult(404); //todo, offer to create the missing files?
 			else {
 				FileVM fvm = FileVmFromFile(file, true, path);
@@ -76,7 +90,7 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult GetContents(string user, string path) {
 			if(!VerifyFileAccess(user, path)) return Json(new { success = false });
-			File file = db.GetFileByPath(path);
+			File file = db.GetFileByPath(User.Identity.GetUserId(), path);
 			if(file == null) return Json(new { success = false });
 			FileVM fvm = FileVmFromFile(file, true, path);
 			return Json(new { success = true, html = this.GetHtmlFromPartialView("_Contents", fvm) });
@@ -84,6 +98,7 @@ namespace NoteFolder.Controllers {
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Create([Bind(Include = "Name, Path, Description, Text, IsFolder, ParentID")] FileVM f) {
+			if(f.ParentID != null && !VerifyFileOwnership(f.ParentID.Value)) AccessFailed();
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Create", f) });
 			}
@@ -91,14 +106,14 @@ namespace NoteFolder.Controllers {
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
 			}
 			f.Name = f.Name.Trim();
-			File existingFile = db.Files.Where(x => x.Name == f.Name).SingleOrDefault();
-			if(existingFile != null) {
+			if(FileAlreadyExists(f.ParentID, f.Name)) {
 				ModelState.AddModelError("Name", "A file already exists here with this name.");
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Create", f) });
 			}
 			File dbf = Mapper.Map<File>(f);
 			dbf.TimeCreated = DateTime.Now;
 			dbf.TimeLastEdited = dbf.TimeCreated;
+			dbf.UserID = User.Identity.GetUserId();
 			db.Files.Add(dbf);
 			db.SaveChanges();
 			string fullPath = null;
@@ -107,9 +122,18 @@ namespace NoteFolder.Controllers {
 			TempData["LastAction"] = $"{fullPath} created!";
 			return Json(new { success = true, path = fullPath });
 		}
+
+		protected bool FileAlreadyExists(int? parentID, string fileName) {
+			return CurrentUserFiles.Where(x => x.ParentID == parentID && x.Name == fileName).Any();
+		}
+		protected bool FileAlreadyExists(int? parentID, string fileName, int ignoredExistingID) {
+			return CurrentUserFiles.Where(x => x.ParentID == parentID && x.Name == fileName && x.ID != ignoredExistingID).Any();
+		}
+
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, IsFolder, ExistingID")] FileVM f) {
+		public ActionResult Edit([Bind(Include = "Name, Path, Description, Text, IsFolder, ExistingID, ParentID")] FileVM f) {
+			if(!VerifyFileOwnership(f.ExistingID.Value)) AccessFailed();
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Edit", f) });
 			}
@@ -117,8 +141,7 @@ namespace NoteFolder.Controllers {
 				if(f.Text != null) throw new FormatException("Folders cannot have text, only name & description.");
 			}
 			f.Name = f.Name.Trim();
-			File existingFile = db.Files.Where(x => x.Name == f.Name && x.ID != f.ExistingID).SingleOrDefault();
-			if(existingFile != null) {
+			if(FileAlreadyExists(f.ParentID, f.Name, f.ExistingID ?? -1)) {
 				ModelState.AddModelError("Name", "A file already exists here with this name.");
 				return Json(new { success = false, html = this.GetHtmlFromPartialView("_Edit", f) });
 			}
@@ -137,6 +160,7 @@ namespace NoteFolder.Controllers {
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Delete([Bind(Include = "Path, ExistingID")] DeleteFileVM f) {
+			if(!VerifyFileOwnership(f.ExistingID.Value)) AccessFailed();
 			if(!ModelState.IsValid) {
 				return Json(new { success = false, html = "" }); //todo: This could be improved for failure cases.
 			}
