@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using NoteFolder.Models;
 
@@ -13,7 +14,15 @@ namespace NoteFolder {
 			app.UseCookieAuthentication(new CookieAuthenticationOptions {
 				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
 				LoginPath = new PathString("/Login"),
-				ExpireTimeSpan = TimeSpan.FromDays(7)
+				ExpireTimeSpan = TimeSpan.FromDays(7),
+				Provider = new CookieAuthenticationProvider {
+					OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<AppUserManager, User>
+					(
+						validateInterval: TimeSpan.FromSeconds(30),
+						regenerateIdentity:
+							(manager, user) => manager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie)
+					)
+				}
 			});
 		}
 	}
