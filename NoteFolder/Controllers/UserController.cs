@@ -2,17 +2,13 @@
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using NoteFolder.Models;
 using NoteFolder.ViewModels;
 
 namespace NoteFolder.Controllers {
 	public class UserController : Controller {
-		private UserManager<User> UserManager;
-		public UserController() {
-			UserManager = new UserManager<User>(new UserStore<User>(new AppDbContext()));
-			UserManager.UserValidator = new UserValidator<User>(UserManager) { AllowOnlyAlphanumericUserNames = false };
-		}
+		private AppUserManager UserManager => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
 		[AllowAnonymous]
 		public ActionResult LogIn(string returnURL) {

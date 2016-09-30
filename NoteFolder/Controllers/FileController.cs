@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using AutoMapper;
+using Microsoft.AspNet.Identity.Owin;
 using NoteFolder.Models;
 using NoteFolder.ViewModels;
 using NoteFolder.Extensions;
 
 namespace NoteFolder.Controllers {
 	public class FileController : Controller {
-		private AppDbContext db = new AppDbContext();
+		private AppDbContext db => HttpContext.GetOwinContext().Get<AppDbContext>();
 
 		/// <summary>
 		/// Maps File to FileVM while handling population of DirectChildren collection.

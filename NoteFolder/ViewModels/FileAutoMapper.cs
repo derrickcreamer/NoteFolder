@@ -1,6 +1,6 @@
 ﻿using System;
-using NoteFolder.Models;
 using AutoMapper;
+using NoteFolder.Models;
 
 namespace NoteFolder.ViewModels {
 	public static class FileAutoMapper {

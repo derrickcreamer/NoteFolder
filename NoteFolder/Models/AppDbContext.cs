@@ -24,6 +24,7 @@ namespace NoteFolder.Models {
 		public AppDbContext() : base("NoteFolder.Models.AppDbContext") {
 			Database.SetInitializer(new FileInit());
 		}
+		public static AppDbContext Create() => new AppDbContext();
 
 		public void DeleteFileRecursively(int id) {
 			File file = Files.Find(id);
