@@ -42,6 +42,7 @@ namespace NoteFolder.Controllers {
 		[HttpPost]
 		public ActionResult LogOut() {
 			Request.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+			UserManager.UpdateSecurityStamp(User.Identity.GetUserId());
 			TempData["LastAction"] = "You have successfully logged out.";
 			return RedirectToAction("Index", "Home");
 		}

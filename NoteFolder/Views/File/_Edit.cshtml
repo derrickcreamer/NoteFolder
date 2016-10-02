@@ -1,8 +1,16 @@
 ﻿@model FileVM
 
-@{ string openClass = IsAjax? "open" : null; }
-<div id='editForm' class='collapsible @openClass'>
-	@using(Ajax.BeginForm("Edit", "File", new AjaxOptions { OnSuccess = $"checkUpdateSuccess(data, 'editForm')" })) {
+@{
+	string openClass = IsAjax? "open" : null;
+	string editForm = "editForm";
+}
+<div id='@editForm' class='collapsible @openClass'>
+	@using(Ajax.BeginForm("Edit", "File",
+		new AjaxOptions {
+			OnSuccess = $"checkUpdateSuccess(data, status, xhr, '{editForm}', 'submitEditBtn')",
+			OnFailure = $"ajaxError(xhr, status, error, '{editForm}')"
+		}
+	)) {
 		@Html.AntiForgeryToken()
 		@Html.ValidationMessage("Name")
 		@Html.Label("Name")
@@ -17,7 +25,7 @@
 		@Html.Hidden("IsFolder")
 		@Html.Hidden("ExistingID")
 		@Html.Hidden("ParentID")
-		<button class="btn" type="submit">Edit</button>
+		<button id="submitEditBtn" class="btn" type="submit">Edit</button>
 	}
 	@Html.Partial("_Delete", Model)
 </div>

@@ -15,11 +15,17 @@
 	else {
 		deleteMsg = "Really delete this note?";
 	}
+	string editForm = "editForm";
 }
-@using(Ajax.BeginForm("Delete", "File", null, new AjaxOptions { OnSuccess = "checkUpdateSuccess(data, 'editForm')" },
-										new { onclick = $"return confirm('{deleteMsg}');" })) {
+@using(Ajax.BeginForm("Delete", "File", null,
+	new AjaxOptions {
+		OnSuccess = $"checkUpdateSuccess(data, status, xhr, '{editForm}', 'submitDeleteBtn')",
+		OnFailure = $"ajaxError(xhr, status, error, '{editForm}')",
+		Confirm = deleteMsg
+	}
+)) {
 	@Html.AntiForgeryToken()
 	@Html.Hidden("Path")
 	@Html.Hidden("ExistingID")
-	<button class="btn" type="submit">Delete</button>
+	<button id="submitDeleteBtn" class="btn" type="submit">Delete</button>
 }

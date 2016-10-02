@@ -20,7 +20,7 @@
 				<div class="time">Last edited: @Model.TimeLastEdited</div>
 			}
 		</div>
-		<button type="button" id="editBtn" class="mainBtn btn">Edit @Model.Name</button>
+		<button type="button" id="toggleEditBtn" class="mainBtn btn">Edit @Model.Name</button>
 		@Html.Partial("_Edit", Model)
 	}
 	@if(Model.IsFolder) {
@@ -37,13 +37,22 @@
 
 @section PageScripts{
 <script type="text/javascript"> @* todo: Find a good organization scheme for scripts. *@
-	function checkUpdateSuccess(result, id) {
-		if (result.success) {
-			window.location.href = '/@(User.Identity.Name)/files/' + result.path;
+	function checkUpdateSuccess(result, status, xhr, id, buttonID) {
+		if (result.authFailed) {
+			$('#' + id).prepend("You've been logged out. If you just tried to save changes, those changes have NOT been applied.");
+			$('#' + buttonID).prop('disabled', true);
 		}
 		else {
-			$('#' + id).replaceWith(result.html);
+			if (result.success) {
+				window.location.href = '/@(User.Identity.Name)/files/' + result.path;
+			}
+			else {
+				$('#' + id).replaceWith(result.html);
+			}
 		}
+	}
+	function ajaxError(xhr, status, error, id) {
+		$('#' + id).prepend("Something went wrong. If you just tried to save changes, those changes have NOT been applied.");
 	}
 	$(document).on('click', '.loadContentsBtn', function (e) {
 		e.preventDefault();
@@ -61,15 +70,24 @@
 				type: 'POST',
 				url: '@Url.Action("GetContents","File")',
 				data: form.serialize(),
-				success: function (result) {
-					if (result.success) {
-						contents.replaceWith(result.html);
+				success: function (result, status, xhr) {
+					if (result.authFailed) {
+						window.location.reload(true);
 					}
+					else {
+						if (result.success) {
+							contents.replaceWith(result.html);
+						}
+					}
+				},
+				error: function (xhr, status, error) {
+					contents.text("Something went wrong between here and the server - check your connection.");
+					button.prop('disabled', true);
 				}
 			});
 		}
 	});
-	$('#editBtn').click(function (e) {
+	$('#toggleEditBtn').click(function (e) {
 		e.preventDefault();
 		$('#editForm').toggle()
 	});

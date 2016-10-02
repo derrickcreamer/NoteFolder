@@ -2,12 +2,18 @@
 
 @{
 	string divID = Model.IsFolder? "createFolderForm" : "createNoteForm";
+	string buttonID = Model.IsFolder? "createFolderBtn" : "createNoteBtn";
 	string submitString = Model.IsFolder? "Create Folder" : "Create Note";
 	string openClass = IsAjax? "open" : null;
 }
 
 <div id='@divID' class='collapsible @openClass'>
-	@using(Ajax.BeginForm("Create", "File", new AjaxOptions {   OnSuccess = $"checkUpdateSuccess(data, '{divID}')" })) {
+	@using(Ajax.BeginForm("Create", "File",
+		new AjaxOptions {
+			OnSuccess = $"checkUpdateSuccess(data, status, xhr, '{divID}', '{buttonID}')",
+			OnFailure = $"ajaxError(xhr, status, error, '{divID}')"
+		}
+	)) {
 		@Html.AntiForgeryToken()
 		<div class="createFormName createFormInput">
 			@Html.ValidationMessage("Name")
@@ -27,6 +33,6 @@
 		@Html.Hidden("IsFolder")
 		@Html.Hidden("Path")
 		@Html.Hidden("ParentID")
-		<button class="btn" type="submit">@submitString</button>
+		<button id='@buttonID' class="btn" type="submit">@submitString</button>
 	}
 </div>
