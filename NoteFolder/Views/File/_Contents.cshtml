@@ -2,26 +2,38 @@
 
 <div id='@("contentsFor" + Model.ExistingID.ToString())'>
 	@if(Model.IsFolder) {
-		<ul>
-			@foreach(var child in Model.DirectChildren) {
-				<li>
-					@{
-						string childBaseID = "For" + child.ExistingID.ToString();
-					}
-					<form class="loadContentsForm" id='@childBaseID'>
-						<input type="hidden" name="Path" value="@child.Path" />
-						<button class="loadContentsBtn btn" type="submit">+</button>
-					</form>
-					@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink" })
-					@if(!string.IsNullOrEmpty(child.Description)){
-						<span class="contentDesc">@child.Description</span>
-					}
-					<span id='@("contents" + childBaseID)'></span>
-				</li>
-			}
-		</ul>
+		if(Model.DirectChildren.Count == 0) {
+			<span class="emptyContents">(empty)</span>
+		}
+		else {
+			<ul>
+				@foreach(var child in Model.DirectChildren) {
+					<li class="contentWhole">
+						@{
+							string childBaseID = "For" + child.ExistingID.ToString();
+						}
+						<div class="contentRow">
+							<form class="loadContentsForm" id='@childBaseID'>
+								<input type="hidden" name="Path" value="@child.Path" />
+								<button class="loadContentsBtn btn" type="submit">+</button>
+							</form>
+							@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink" })
+							@if(!string.IsNullOrEmpty(child.Description)) {
+								<span class="contentDesc">@child.Description</span>
+							}
+						</div>
+						<span id='@("contents" + childBaseID)'></span>
+					</li>
+				}
+			</ul>
+		}
 	}
 	else{
-		<p class="noteText">@Model.Text</p>
+		if(string.IsNullOrEmpty(Model.Text)){
+			<span class="emptyContents">(empty)</span>
+		}
+		else{
+			<p class="noteText">@Model.Text</p>
+		}
 	}
 </div>

@@ -15,7 +15,7 @@ namespace NoteFolder {
 			app.UseCookieAuthentication(new CookieAuthenticationOptions {
 				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
 				LoginPath = new PathString("/Login"),
-				ExpireTimeSpan = TimeSpan.FromDays(7),
+				ExpireTimeSpan = TimeSpan.FromDays(999),
 				Provider = new CookieAuthenticationProvider {
 					OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<AppUserManager, User>
 					(

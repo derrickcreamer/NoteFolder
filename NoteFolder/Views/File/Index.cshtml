@@ -70,6 +70,7 @@
 				type: 'POST',
 				url: '@Url.Action("GetContents","File")',
 				data: form.serialize(),
+				datatype: 'json',
 				success: function (result, status, xhr) {
 					if (result.authFailed) {
 						window.location.reload(true);

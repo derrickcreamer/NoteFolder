@@ -1,19 +1,22 @@
-﻿.collapsible{
+﻿/* Very handy outlines for debugging with this box-shadow:*/
+/* *{
+  box-shadow:inset 0 0 16px -9px red;
+}*/
+.collapsible{
     display: none;
     border: 1px black solid;
-    padding: 10px;
+    padding: .625em;
 }
 .open {
     display: block;
 }
 
 #fileInfo{
-    position: relative;
 }
 .times {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     float: right;
 }
 .time{
@@ -26,23 +29,29 @@
 }
 .logInOutBtn{
     position: absolute;
-    top: 0px;
-    right: 0px;
-    margin: 8px;
+    top: 0;
+    right: 0;
+    margin: .5em;
 }
 .mainBtn {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-right: 10px;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    margin-right: .625em;
+}
+.contentRow{
+    display: flex;
+    align-items: center;
+}
+.contentWhole{
+    margin-left: 2.4em;
 }
 .loadContentsForm{
-    display: inline;
 }
 .loadContentsBtn{
     font-weight: bold;
-    line-height: 0px;
-    padding: 0px 0px;
-    margin: 5px 0px;
+    line-height: 0;
+    padding: 0;
+    margin: .3em 0;
     width: 1.6em;
     height: 1.6em;
     border-radius: 2.5em;
@@ -59,42 +68,50 @@
 .createFormText { 
 }
 #registerForm{
-    margin-top: 40px;
+    margin-top: 2.5em;
 }
 #lastAction{
-    position: absolute;
-    left: 40%;
-    top: 50px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: .5em;
+}
+#lastActionText{
+    display: inline-block;
     background: #bceebc;
-    padding: 6px 12px;
-    border-radius: 0px 0px 15px 15px;
+    padding: .4em .8em;
+    border-radius: 0 0 1em 1em;
 }
 #allContents{
-    margin-top: 20px;
+    margin-top: 1.25em;
 }
 .contentNameLink{
     font-weight: bold;
-    margin-left: 10px;
+    margin-left: .8em;
     white-space: pre-wrap;
 }
 .contentDesc{
-    padding: 2px 8px;
-    margin-left: 160px;
+    padding: .125em .5em;
+    margin-left: 10em;
     background: #dfdfff;
     font-style: italic;
-    border-radius: 8px;
+    border-radius: .5em;
 }
 .noteText{
-    padding: 2px 4px;
+    padding: .125em .25em;
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 2.4em;
     background: #ffff9f;
     white-space: pre-wrap;
+}
+.emptyContents{
+    font-style: italic;
+    margin-left: 2.4em;
 }
 
 
 ul{
     list-style: none;
+    padding-left: 0;
 }
 textarea {
     width: 80em;
@@ -102,27 +119,27 @@ textarea {
 }
 
 label{
-  margin-right: 10px;
-  margin-left: 20px;
+  margin-right: .625em;
+  margin-left: 1.25em;
 }
 
 
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    padding-top: 3.5em;
+    padding-bottom: 1.25em;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 400px;
+    max-width: 25em;
 }
 
 
