@@ -1,8 +1,15 @@
 ﻿@model FileVM
 
+@{
+	var pathSections = Model.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+	ViewBag.Title = $"{User.Identity.Name}'s files";
+	if(pathSections.Length > 0) {
+		ViewBag.Title = $"/{Model.Path}";
+	}
+}
+
 <div id="fileInfo">
 	@Html.ActionLink($"{User.Identity.Name}'s files", "Index", "File", new { path = "" }, new { @class = "pathWord pathLink" })
-	@{ var pathSections = Model.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); }
 	@for(int i = 1;i<pathSections.Length;++i) {
 		string[] partialPath = new string[i];
 		Array.Copy(pathSections, partialPath, i);
