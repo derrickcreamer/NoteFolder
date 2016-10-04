@@ -3,19 +3,22 @@
 <div id='@("contentsFor" + Model.ExistingID.ToString())'>
 	@if(Model.IsFolder) {
 		if(Model.DirectChildren.Count == 0) {
-			<span class="emptyContents">(empty)</span>
+			<span class="fileContents emptyContents">(empty)</span>
 		}
 		else {
-			<ul>
+			<ul class="fileContents">
 				@foreach(var child in Model.DirectChildren) {
-					<li class="contentWhole">
+					<li>
 						@{
 							string childBaseID = "For" + child.ExistingID.ToString();
+							string icon = "glyphicon-" + (child.IsFolder ? "folder-close" : "file");
 						}
 						<div class="contentRow">
 							<form class="loadContentsForm" id='@childBaseID'>
 								<input type="hidden" name="Path" value="@child.Path" />
-								<button class="loadContentsBtn btn" type="submit">+</button>
+								<button class="loadContentsBtn" type="submit">
+									<i class="glyphicon @icon fileGlyph"></i>
+								</button>
 							</form>
 							@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink userData" })
 							@if(!string.IsNullOrEmpty(child.Description)) {
@@ -30,10 +33,10 @@
 	}
 	else{
 		if(string.IsNullOrEmpty(Model.Text)){
-			<span class="emptyContents">(empty)</span>
+			<span class="fileContents emptyContents">(empty)</span>
 		}
 		else{
-			<p class="noteText userData">@Model.Text</p>
+			<p class="fileContents noteText userData">@Model.Text</p>
 		}
 	}
 </div>

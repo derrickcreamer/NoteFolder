@@ -53,25 +53,6 @@
     margin-bottom: 1.25em;
     margin-right: .625em;
 }
-.contentRow{
-    display: flex;
-    align-items: center;
-}
-.contentWhole{
-    margin-left: 2.4em;
-}
-.loadContentsForm{
-}
-.loadContentsBtn{
-    font-weight: bold;
-    line-height: 0;
-    padding: 0;
-    margin: .3em 0;
-    width: 1.6em;
-    height: 1.6em;
-    border-radius: 100%;
-}
-
 .createFormInput {
 }
 .createFormName{
@@ -99,9 +80,36 @@
 #allContents{
     margin-top: 1.25em;
 }
+.contentRow{
+    display: flex;
+    align-items: center;
+}
+.fileContents{
+    margin-left: 3.0em;
+}
+.loadContentsForm{
+}
+.loadContentsBtn{
+    outline: none !important;
+    border: none;
+    background: transparent;
+    color: #ffb000;
+    font-size: 1.8em;
+    padding: 0;
+    margin: .2em 0;
+}
+.loadContentsBtn > i{
+    padding: 0;
+    margin: 0;
+}
+.loadContentsBtn:hover, .loadContentsBtn:active{
+    color: #ff9000 !important;
+}
+.fileGlyph{
+}
 .contentNameLink{
     font-weight: bold;
-    margin-left: .8em;
+    margin-left: 1.0em;
 }
 .contentDesc{
     padding: .125em .5em;
@@ -113,14 +121,11 @@
 .noteText{
     padding: .125em .25em;
     display: inline-block;
-    margin-left: 2.4em;
     background: #ffff9f;
 }
 .emptyContents{
     font-style: italic;
-    margin-left: 2.4em;
 }
-
 
 ul{
     list-style: none;

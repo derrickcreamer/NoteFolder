@@ -59,13 +59,23 @@
 		var button = $(e.target);
 		var form = button.parent();
 		var contents = $("#contents" + form.attr('id'));
+		var glyphicon = button.find('i');
 		if (contents[0].nodeName == "DIV") { // if it's a div, it's already loaded.
-			if (button.text() == "+") button.text("-");
-			else button.text("+");
+			if (glyphicon.hasClass('glyphicon-folder-open') || glyphicon.hasClass('glyphicon-folder-close')) {
+				glyphicon.toggleClass('glyphicon-folder-open glyphicon-folder-close');
+			}
+			else {
+				glyphicon.toggleClass('glyphicon-file glyphicon-align-left');
+			}
 			contents.toggle();
 		}
 		else {
-			button.text("-");
+			if (glyphicon.hasClass('glyphicon-folder-close')) {
+				glyphicon.toggleClass('glyphicon-folder-open glyphicon-folder-close');
+			}
+			else {
+				glyphicon.toggleClass('glyphicon-file glyphicon-align-left');
+			}
 			$.ajax({
 				type: 'POST',
 				url: '@Url.Action("GetContents","File")',
