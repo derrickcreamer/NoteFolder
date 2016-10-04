@@ -37,7 +37,7 @@
 
     <div class="container body-content">
 		@if(TempData.ContainsKey("LastAction")) {
-			<div id="lastAction"><span id="lastActionText">@TempData["LastAction"]</span></div>
+			<div id="lastAction"><span id="lastActionText" class="userData">@TempData["LastAction"]</span></div>
 		}
         @RenderBody()
         <hr />

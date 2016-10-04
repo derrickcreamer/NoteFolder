@@ -9,18 +9,18 @@
 		string path = string.Join("/", partialPath);
 
 		<span class="pathSeparator"> / </span>
-		@Html.ActionLink(partialPath[i - 1], "Index", "File", new { path = path }, new { @class = "pathWord pathLink" })
+		@Html.ActionLink(partialPath[i - 1], "Index", "File", new { path = path }, new { @class = "pathWord pathLink userData" })
 	}
 	@if(!Model.IsRootFolder) {
-		<span class="pathSeparator"> / </span><span class="pathWord pathName">@Model.Name</span>
-		<div class="desc">@Model.Description</div>
+		<span class="pathSeparator"> / </span><span class="pathWord pathName userData">@Model.Name</span>
+		<div class="desc userData">@Model.Description</div>
 		<div class="times">
 			<div class="time">Created: @Model.TimeCreated</div>
 			@if(Model.TimeCreated != Model.TimeLastEdited) {
 				<div class="time">Last edited: @Model.TimeLastEdited</div>
 			}
 		</div>
-		<button type="button" id="toggleEditBtn" class="mainBtn btn">Edit @Model.Name</button>
+		<button type="button" id="toggleEditBtn" class="mainBtn btn userData">Edit @Model.Name</button>
 		@Html.Partial("_Edit", Model)
 	}
 	@if(Model.IsFolder) {

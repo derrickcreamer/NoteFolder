@@ -10,7 +10,9 @@
 .open {
     display: block;
 }
-
+.userData{
+    white-space: pre-wrap;
+}
 #fileInfo{
 }
 .times {
@@ -23,9 +25,22 @@
     text-align: right;
 }
 
+.navbar-brand, .navbar-brand:hover, .navbar-brand:active, .navbar-brand:focus {
+    outline: none !important;
+}
+.navbar-brand:focus{
+    color: #999999 !important;
+}
+.navbar-brand:active{
+    color: #ffffff !important;
+}
 .btn{
     outline: none !important;
     background: #ffb000;
+    color: black !important;
+}
+.btn:hover, .btn:active{
+    background: #ff9000;
 }
 .logInOutBtn{
     position: absolute;
@@ -54,7 +69,7 @@
     margin: .3em 0;
     width: 1.6em;
     height: 1.6em;
-    border-radius: 2.5em;
+    border-radius: 100%;
 }
 
 .createFormInput {
@@ -87,7 +102,6 @@
 .contentNameLink{
     font-weight: bold;
     margin-left: .8em;
-    white-space: pre-wrap;
 }
 .contentDesc{
     padding: .125em .5em;
@@ -101,7 +115,6 @@
     display: inline-block;
     margin-left: 2.4em;
     background: #ffff9f;
-    white-space: pre-wrap;
 }
 .emptyContents{
     font-style: italic;

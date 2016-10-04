@@ -7,7 +7,7 @@
 @using(Html.BeginForm()) {
 	@Html.AntiForgeryToken()
 	@Html.LabelFor(x => x.UserName)
-	@Html.TextBoxFor(x => x.UserName)
+	@Html.TextBoxFor(x => x.UserName, new { autofocus = "autofocus" })
 	@Html.LabelFor(x => x.Password)
 	@Html.PasswordFor(x => x.Password)
 	@Html.HiddenFor(x => x.ReturnURL)

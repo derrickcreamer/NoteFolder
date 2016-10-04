@@ -17,9 +17,9 @@
 								<input type="hidden" name="Path" value="@child.Path" />
 								<button class="loadContentsBtn btn" type="submit">+</button>
 							</form>
-							@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink" })
+							@Html.ActionLink(child.Name, "Index", "File", new { path = child.Path }, new { @class = "contentNameLink userData" })
 							@if(!string.IsNullOrEmpty(child.Description)) {
-								<span class="contentDesc">@child.Description</span>
+								<span class="contentDesc userData">@child.Description</span>
 							}
 						</div>
 						<span id='@("contents" + childBaseID)'></span>
@@ -33,7 +33,7 @@
 			<span class="emptyContents">(empty)</span>
 		}
 		else{
-			<p class="noteText">@Model.Text</p>
+			<p class="noteText userData">@Model.Text</p>
 		}
 	}
 </div>
