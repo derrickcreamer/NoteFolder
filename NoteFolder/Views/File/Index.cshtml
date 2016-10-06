@@ -6,6 +6,7 @@
 	if(pathSections.Length > 0) {
 		ViewBag.Title = $"/{Model.Path}";
 	}
+	string icon = "glyphicon-" + (Model.IsFolder ? "folder-open" : "align-left");
 }
 
 <div id="fileInfo">
@@ -20,7 +21,12 @@
 	}
 	@if(!Model.IsRootFolder) {
 		<span class="pathSeparator"> / </span><span class="pathWord pathName userData">@Model.Name</span>
+	}
+	<div id="mainGlyphDesc">
+		<div id="mainGlyph" class="glyphContainer"><i class="glyphicon @icon fileGlyph"></i></div>
 		<div class="desc userData">@Model.Description</div>
+	</div>
+	@if(!Model.IsRootFolder) {
 		<div class="times">
 			<div class="time">Created: @Model.TimeCreated</div>
 			@if(Model.TimeCreated != Model.TimeLastEdited) {
@@ -28,16 +34,20 @@
 			}
 		</div>
 		<button type="button" id="toggleEditBtn" class="mainBtn btn userData">Edit @Model.Name</button>
-		@Html.Partial("_Edit", Model)
 	}
 	@if(Model.IsFolder) {
 		<button type="button" id="newFolderBtn" class="mainBtn btn">New Folder</button>
 		<button type="button" id="newNoteBtn" class="mainBtn btn">New Note</button>
+	}
+	@if(!Model.IsRootFolder) {
+		@Html.Partial("_Edit", Model)
+	}
+	@if(Model.IsFolder) {
 		@Html.Partial("_Create", new FileVM { IsFolder = true, ParentID = Model.ExistingID, Path = Model.Path })
 		@Html.Partial("_Create", new FileVM { IsFolder = false, ParentID = Model.ExistingID, Path = Model.Path })
 	}
 	<div id="allContents">
-		Contents:
+		<span id="mainContentsLabel">Contents:</span>
 		@Html.Partial("_Contents", Model)
 	</div>
 </div>
@@ -107,17 +117,21 @@
 	});
 	$('#toggleEditBtn').click(function (e) {
 		e.preventDefault();
+		$('#createFolderForm').toggle(false);
+		$('#createNoteForm').toggle(false);
 		$('#editForm').toggle()
 	});
 	$('#newFolderBtn').click(function (e) {
 		e.preventDefault();
-		$('#createFolderForm').toggle();
 		$('#createNoteForm').toggle(false);
+		$('#editForm').toggle(false);
+		$('#createFolderForm').toggle();
 	});
 	$('#newNoteBtn').click(function (e) {
 		e.preventDefault();
-		$('#createNoteForm').toggle();
 		$('#createFolderForm').toggle(false);
+		$('#editForm').toggle(false);
+		$('#createNoteForm').toggle();
 	});
 </script>
 }

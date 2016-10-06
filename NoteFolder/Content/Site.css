@@ -14,6 +14,8 @@
     white-space: pre-wrap;
 }
 #fileInfo{
+    margin-top: 1.0em;
+    position: relative;
 }
 .times {
     position: absolute;
@@ -23,8 +25,17 @@
 }
 .time{
     text-align: right;
+    font-style: italic;
+    font-size: .85em;
+    margin-bottom: .2em;
 }
-
+.pathSeparator{
+}
+.pathWord{
+}
+.pathName{
+    font-weight: bold;
+}
 .navbar-brand, .navbar-brand:hover, .navbar-brand:active, .navbar-brand:focus {
     outline: none !important;
 }
@@ -49,19 +60,35 @@
     margin: .5em;
 }
 .mainBtn {
-    margin-top: 1.25em;
+    margin-top: 0.5em;
     margin-bottom: 1.25em;
     margin-right: .625em;
 }
-.createFormInput {
+#toggleEditBtn{
 }
-.createFormName{
+.collapseForm{
+    text-align: center;
+}
+.collapseForm > form{
     display: inline;
 }
-.createFormDesc{
-    display: inline;
+.collapseForm button{
+    min-width: 10%;
+    margin: 1.5em 4em .0em 4em;
 }
-.createFormText { 
+.allTextInputsSection{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+.nameDescSection{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-end;
+    justify-content: space-around;
+}
+.formSection{
+    margin: 1em 2em;
 }
 #registerForm{
     margin-top: 2.5em;
@@ -69,13 +96,19 @@
 #lastAction{
     width: 100%;
     text-align: center;
-    margin-bottom: .5em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1051; /* A z-index higher than Bootstrap's navbar value */
 }
 #lastActionText{
     display: inline-block;
     background: #bceebc;
     padding: .4em .8em;
     border-radius: 0 0 1em 1em;
+}
+#mainContentsLabel{
+    font-weight: bold;
 }
 #allContents{
     margin-top: 1.25em;
@@ -92,9 +125,6 @@
 .loadContentsBtn{
     outline: none !important;
     border: none;
-    background: transparent;
-    color: #ffb000;
-    font-size: 1.8em;
     padding: 0;
     margin: .2em 0;
 }
@@ -105,11 +135,27 @@
 .loadContentsBtn:hover, .loadContentsBtn:active{
     color: #ff9000 !important;
 }
+.glyphContainer{
+    background: transparent;
+    color: #ffb000;
+    font-size: 1.8em;
+}
 .fileGlyph{
+}
+#mainGlyph{
+    font-size: 4rem;
+    margin-right: .6em;
+}
+#mainGlyphDesc{
+    display: flex;
+    align-items: center;
 }
 .contentNameLink{
     font-weight: bold;
     margin-left: 1.0em;
+}
+.desc{
+    font-style: italic;
 }
 .contentDesc{
     padding: .125em .5em;

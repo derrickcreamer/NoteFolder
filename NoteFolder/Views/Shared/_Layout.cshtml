@@ -9,6 +9,9 @@
 	<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+	@if(TempData.ContainsKey("LastAction")) {
+		<div id="lastAction"><span id="lastActionText" class="userData">@TempData["LastAction"]</span></div>
+	}
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -36,9 +39,6 @@
     </div>
 
     <div class="container body-content">
-		@if(TempData.ContainsKey("LastAction")) {
-			<div id="lastAction"><span id="lastActionText" class="userData">@TempData["LastAction"]</span></div>
-		}
         @RenderBody()
         <hr />
         <footer>

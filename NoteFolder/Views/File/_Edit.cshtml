@@ -4,23 +4,33 @@
 	string openClass = IsAjax? "open" : null;
 	string editForm = "editForm";
 }
-<div id='@editForm' class='collapsible @openClass'>
-	@using(Ajax.BeginForm("Edit", "File",
+<div id='@editForm' class='collapseForm collapsible @openClass'>
+	@using(Ajax.BeginForm("Edit", "File", null,
 		new AjaxOptions {
 			OnSuccess = $"checkUpdateSuccess(data, status, xhr, '{editForm}', 'submitEditBtn')",
 			OnFailure = $"ajaxError(xhr, status, error, '{editForm}')"
 		}
 	)) {
 		@Html.AntiForgeryToken()
-		@Html.ValidationMessage("Name")
-		@Html.Label("Name")
-		@Html.TextBox("Name")
-		@Html.Label("Description")
-		@Html.TextBox("Description")
-		if(!Model.IsFolder) {
-			@Html.Label("Text")
-			@Html.TextArea("Text")
-		}
+		<div class="allTextInputsSection">
+			<div class="nameDescSection">
+				<div class="formSection">
+					@Html.ValidationMessage("Name")
+					@Html.Label("Name")
+					@Html.TextBox("Name")
+				</div>
+				<div class="formSection">
+					@Html.Label("Description")
+					@Html.TextBox("Description")
+				</div>
+			</div>
+			@if(!Model.IsFolder) {
+				<div class="formSection">
+					@Html.Label("Text")
+					@Html.TextArea("Text")
+				</div>
+			}
+		</div>
 		@Html.Hidden("Path")
 		@Html.Hidden("IsFolder")
 		@Html.Hidden("ExistingID")
